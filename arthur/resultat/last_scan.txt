@@ -1,0 +1,25 @@
+Date de création du fichier : 2024-12-16 17:31:11
+
+Total de machines connectées: 2
+IP: 172.20.10.3
+  Système d'exploitation: Windows 10.0.22631
+  Ports ouverts: 135, 139, 445, 902, 912
+    Port 135: msrpc 
+    Vulnérabilités: Aucune vulnérabilité détectée
+    Port 139: netbios-ssn 
+    Vulnérabilités: Aucune vulnérabilité détectée
+    Port 445: microsoft-ds 
+    Vulnérabilités: Aucune vulnérabilité détectée
+    Port 902: vmware-auth 1.10
+    Vulnérabilités: {'ssl-ccs-injection': 'No reply from server (TIMEOUT)'}
+    Port 912: vmware-auth 1.0
+    Vulnérabilités: Aucune vulnérabilité détectée
+
+IP: 172.20.10.1
+  Système d'exploitation: Windows 10.0.22631
+  Ports ouverts: 21, 53
+    Port 21: tcpwrapped 
+    Vulnérabilités: Aucune vulnérabilité détectée
+    Port 53: domain 
+    Vulnérabilités: Aucune vulnérabilité détectée
+
