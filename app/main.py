@@ -82,6 +82,10 @@ class App:
         self.ping_button.bind("<Enter>", lambda event: on_enter(self.ping_button))
         self.ping_button.bind("<Leave>", lambda event: on_leave(self.ping_button))
 
+        # Ajouter un label pour afficher l'heure au centre de la barre de navigation
+        self.clock_label = tk.Label(self.header_frame, text=self.get_current_time(), font=("Helvetica", 16), bg="#141526", fg="#d9d7dc")
+        self.clock_label.pack(side="left", padx=10, expand=True)
+
         # Ajouter un bouton Go au centre avec animation en vague
         self.go_button = tk.Button(self.main_frame, text="Go", font=("Helvetica", 24, "bold"), command=self.animate_go_button, 
                                    bg="#141526", fg="#d9d7dc", bd=0, highlightthickness=0)  # Suppression de l'encadré
@@ -95,6 +99,19 @@ class App:
 
         # Afficher la page d'accueil par défaut
         self.show_home_page()
+
+        # Mettre à jour l'heure chaque seconde
+        self.update_clock()
+
+    def get_current_time(self):
+        """Retourne l'heure actuelle sous forme de chaîne"""
+        return time.strftime('%H:%M:%S')
+
+    def update_clock(self):
+        """Met à jour l'heure sur l'interface"""
+        current_time = self.get_current_time()
+        self.clock_label.config(text=current_time)  # Mettre à jour le label avec l'heure actuelle
+        self.root.after(1000, self.update_clock)  # Réactualiser toutes les 1000ms (1 seconde)
 
     def animate_go_button(self):
         """Animation dynamique en vague pour le bouton Go"""

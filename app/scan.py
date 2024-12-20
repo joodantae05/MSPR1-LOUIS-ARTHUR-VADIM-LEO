@@ -31,12 +31,14 @@ def ping(host):
 
 def scan_ports(host):
     """
-    Scanne les ports de l'hôte en utilisant Nmap pour les ports les plus courants avec des arguments optimisés.
+    Scanne les ports de l'hôte en utilisant Nmap pour les ports les plus courants.
+    Utilisation de l'option '-sV' pour obtenir des informations détaillées sur les services.
     """
     nm = nmap.PortScanner()
     try:
-        # Utilisation de la plage 1-100 pour limiter le scan aux ports les plus courants
-        nm.scan(hosts=host, arguments='-p 1-100 -sV --script=vuln -T4')  # -T4 pour la rapidité
+        # Utilisation de la plage 1-1024 pour couvrir plus de ports populaires tout en augmentant la vitesse
+        # Ne pas inclure l'option -O pour éviter de scanner l'OS
+        nm.scan(hosts=host, arguments='-p 1-1024 -sV --script=vuln -T4')  # -T4 pour la rapidité
 
         open_ports = []
         service_info = {}
@@ -54,7 +56,12 @@ def scan_ports(host):
                     vuln_info = nm[host]['tcp'][port].get('script', 'Aucune vulnérabilité détectée')
                     vulnerabilities[port] = vuln_info
 
+        # Ne pas récupérer l'OS, donc on ne retourne plus `os_info`
         return host, open_ports, service_info, vulnerabilities
+
+    except nmap.nmap.PortScannerError as e:
+        print(f"Erreur lors du scan Nmap pour {host}: {e}")
+        return host, [], {}, {}
     except Exception as e:
         print(f"Erreur lors du scan des ports pour {host}: {e}")
         return host, [], {}, {}
@@ -82,12 +89,11 @@ def scan_network(network_ip):
     return online_hosts, network
 
 
-def display_machine_info(ip, system_platform, system_version, open_ports, service_info, vulnerabilities):
+def display_machine_info(ip, open_ports, service_info, vulnerabilities):
     """
     Affiche les informations détaillées sur chaque machine, optimisé pour un affichage rapide.
     """
     print(f"\n--- Informations pour la machine {ip} ---")
-    print(f"Système d'exploitation: {system_platform} {system_version}")
     if open_ports:
         print(f"Ports ouverts: {', '.join(map(str, open_ports))}")
         for port in open_ports:
@@ -98,3 +104,18 @@ def display_machine_info(ip, system_platform, system_version, open_ports, servic
     else:
         print("Aucun port ouvert")
     print("--------------------------")
+
+
+def optimized_scan(network_ip):
+    """
+    Effectue un scan optimisé du réseau avec un nombre accru de threads et des plages de ports élargies.
+    """
+    online_hosts, network = scan_network(network_ip)
+    
+    # Utilisation de ThreadPoolExecutor pour scanner les ports en parallèle sur chaque hôte trouvé
+    with ThreadPoolExecutor(max_workers=20) as executor:  # Utilisation de plus de threads pour le scan des ports
+        futures = {executor.submit(scan_ports, host): host for host in online_hosts}
+        
+        for future in as_completed(futures):
+            host, open_ports, service_info, vulnerabilities = future.result()
+            display_machine_info(host, open_ports, service_info, vulnerabilities)

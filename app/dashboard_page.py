@@ -1,6 +1,7 @@
 import tkinter as tk
 import socket
 import platform
+import time  # Import pour gérer l'heure
 
 # Fonction pour obtenir l'adresse IP locale
 def get_local_ip():
@@ -81,6 +82,10 @@ class DashboardPage:
         self.system_info = get_system_info()
         self.local_ip = get_local_ip()
 
+        # Initialiser la section des résultats du scan
+        self.scan_results_frame = tk.Frame(self.left_frame, bg="#1E1E2D")
+        self.scan_results_frame.pack(fill="both", padx=20, pady=20)  # Section des résultats du scan
+
         # Afficher les informations système et l'adresse IP locale
         self.display_system_info()
 
@@ -111,8 +116,50 @@ class DashboardPage:
         ip_label = tk.Label(self.right_frame, text=f"Adresse IP locale: {self.local_ip}", fg="white", bg="#1E1E2D", font=("Arial", 12))
         ip_label.pack(anchor="w", pady=5, padx=20)  # Alignement à gauche avec un peu d'espace à gauche
 
+        # Affichage de l'OS local
+        # Remplacer cette ligne avec .format() pour éviter l'erreur f-string
+        os_label = tk.Label(self.right_frame, text="OS: {} {}".format(
+            self.system_info.get("Système d'exploitation", "Inconnu"),
+            self.system_info.get("Version du système d'exploitation", "Inconnue")
+        ), fg="white", bg="#1E1E2D", font=("Arial", 12))
+        os_label.pack(anchor="w", pady=5, padx=20)  # Alignement à gauche avec un peu d'espace à gauche
+
     def refresh_system_info(self):
         """Rafraîchir les informations système et l'adresse IP locale"""
         self.system_info = get_system_info()  # Récupérer à nouveau les informations système
         self.local_ip = get_local_ip()  # Récupérer à nouveau l'adresse IP locale
         self.display_system_info()  # Mettre à jour l'affichage avec les nouvelles informations
+
+    def show_results(self, machine_info):
+        result_text = f"Scan effectué à {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n"  # Ajouter la date et l'heure
+
+        for machine in machine_info:
+            # Vérifier si le tuple contient bien 4 éléments (sans l'OS)
+            if len(machine) == 4:  # (host, open_ports, service_info, vulnerabilities)
+                ip, open_ports, service_info, vulnerabilities = machine
+            else:
+                continue  # Si le tuple a un nombre incorrect d'éléments, passer à la machine suivante
+
+            # Convertir chaque élément de 'vulnerabilities' en chaîne avant de les joindre
+            vulnerabilities_str = ', '.join(map(str, vulnerabilities)) if vulnerabilities else "Aucune vulnérabilité"
+
+            result_text += f"IP: {self.format_ip(ip)}\n"  # Format IP plus lisible
+            result_text += f"Ports ouverts: {self.format_ports(open_ports)}\n"
+            result_text += f"Services détectés: {self.format_services(service_info)}\n"
+            result_text += f"Vulnérabilités: {vulnerabilities_str}\n\n"
+
+        # Mettre à jour l'affichage avec les résultats
+        self.result_label.config(text=result_text)  # Corrected reference to 'result_label'
+
+    def format_ip(self, ip):
+        """Formatage de l'IP pour une meilleure lisibilité"""
+        return f"[ {ip} ]"  # Encadrer l'IP avec des crochets pour plus de clarté
+
+    def format_ports(self, ports):
+        """Formatage des ports ouverts avec un texte stylisé"""
+        return ', '.join([f"Port {port}" for port in ports]) if ports else "Aucun port ouvert"
+
+    def format_services(self, services):
+        """Formatage des services avec un texte stylisé"""
+        return '\n'.join([f"Service: {service['service']} (Version: {service['version']})" 
+                          for service in services.values()]) if services else "Aucun service détecté"
