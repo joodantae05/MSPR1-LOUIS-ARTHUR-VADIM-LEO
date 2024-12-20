@@ -39,6 +39,11 @@ class HomePage:
         self.progress_bar = ttk.Progressbar(self.frame, orient="horizontal", length=400, mode="determinate")
         self.progress_bar.configure(style="TProgressbar")
         self.progress_bar.pack(pady=10)
+
+        # Initialiser le label pour le statut avec un style moderne
+        self.status_label = tk.Label(self.frame, text="", font=("Segoe UI", 12), fg="white", bg="#2C3E50")
+        self.status_label.pack(pady=10)
+
         self.times_per_host = []  # Liste des temps de scan par hôte pour ajuster les estimations
 
         # Variables pour les statistiques

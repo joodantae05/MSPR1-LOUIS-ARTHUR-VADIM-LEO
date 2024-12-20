@@ -86,7 +86,7 @@ class DashboardPage:
         self.local_ip = get_local_ip()
 
         # Initialiser la section des résultats du scan
-        self.scan_results_frame = tk.Frame(self.left_frame, bg="#1E1E2D", height=400)  # Augmenter la taille du cadre
+        self.scan_results_frame = tk.Frame(self.left_frame, bg="#1E1E2D", height=600)  # Augmenter la taille du cadre
         self.scan_results_frame.pack(fill="both", padx=20, pady=20, expand=True)  # Section des résultats du scan
 
         # Ajouter une barre de défilement pour la liste des IPs scannées
@@ -160,17 +160,17 @@ class DashboardPage:
             # Convertir chaque élément de 'vulnerabilities' en chaîne avant de les joindre
             vulnerabilities_str = self.format_vulnerabilities(vulnerabilities)
 
-            # Ajouter l'IP dans un label avec une taille de police plus petite
-            ip_label = tk.Label(self.results_frame, text=f"IP: {self.format_ip(ip)}", fg="white", bg="#1E1E2D", font=("Arial", 10))
+            # Ajouter l'IP dans un label avec une taille de police plus petite et forcer un retour à la ligne
+            ip_label = tk.Label(self.results_frame, text=f"IP: {self.format_ip(ip)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
             ip_label.pack(anchor="w", padx=10, pady=5)
 
-            ports_label = tk.Label(self.results_frame, text=f"Ports ouverts: {self.format_ports(open_ports)}", fg="white", bg="#1E1E2D", font=("Arial", 10))
+            ports_label = tk.Label(self.results_frame, text=f"Ports ouverts: {self.format_ports(open_ports)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
             ports_label.pack(anchor="w", padx=10, pady=5)
 
-            services_label = tk.Label(self.results_frame, text=f"Services détectés: {self.format_services(service_info)}", fg="white", bg="#1E1E2D", font=("Arial", 10))
+            services_label = tk.Label(self.results_frame, text=f"Services détectés: {self.format_services(service_info)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
             services_label.pack(anchor="w", padx=10, pady=5)
 
-            vuln_label = tk.Label(self.results_frame, text=f"Vulnérabilités: {vulnerabilities_str}", fg="white", bg="#1E1E2D", font=("Arial", 10))
+            vuln_label = tk.Label(self.results_frame, text=f"Vulnérabilités: {vulnerabilities_str}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
             vuln_label.pack(anchor="w", padx=10, pady=5)
 
         # Mettre à jour le canvas après ajout des widgets

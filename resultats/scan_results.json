@@ -1,0 +1,46 @@
+{
+    "scan_time": "2024-12-20 22:40:08",
+    "subnet": "192.168.1.0/24",
+    "connected_machines": 3,
+    "machines": [
+        {
+            "ip": "192.168.1.52",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
+        },
+        {
+            "ip": "192.168.1.168",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
+        },
+        {
+            "ip": "192.168.1.189",
+            "open_ports": [
+                135,
+                139,
+                445
+            ],
+            "service_info": {
+                "135": {
+                    "service": "msrpc",
+                    "version": ""
+                },
+                "139": {
+                    "service": "netbios-ssn",
+                    "version": ""
+                },
+                "445": {
+                    "service": "microsoft-ds",
+                    "version": ""
+                }
+            },
+            "vulnerabilities": {
+                "135": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "139": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "445": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
+        }
+    ]
+}

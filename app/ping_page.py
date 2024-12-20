@@ -172,9 +172,10 @@ class PingPage:
     def load_ips_from_file(self, filename):
         """Charger les IPs depuis un fichier texte"""
         try:
+            # Vérification de l'existence du fichier
             with open('./resultats/scanned_ips.txt', "r") as file:
                 ip_list = [line.strip() for line in file.readlines() if line.strip()]
                 return ip_list
         except FileNotFoundError:
-            self.update_result("Fichier non trouvé")
-            return []
+            self.update_result("Le fichier 'scanned_ips.txt' n'a pas été trouvé.")
+            return []  # Retourner une liste vide si le fichier n'existe pas
