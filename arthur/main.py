@@ -12,8 +12,20 @@ class App:
         self.root = root
         self.root.title("Seahawks Harvester")
 
-        # Définir la taille de la fenêtre et la couleur de fond
-        self.root.geometry("1080x720")
+        # Définir la taille de la fenêtre
+        window_width = 1200  # Augmenter la largeur
+        window_height = 800  # Augmenter la hauteur
+
+        # Centrer la fenêtre
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+
+        # Calculer les positions pour centrer la fenêtre
+        position_top = int(screen_height / 2 - window_height / 2)
+        position_right = int(screen_width / 2 - window_width / 2)
+
+        # Appliquer la géométrie de la fenêtre et la position centrale
+        self.root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
         self.root.config(bg="#141526")  # Couleur de fond #141526
         
         # Créer un cadre pour l'ensemble du contenu avec un fond uniforme

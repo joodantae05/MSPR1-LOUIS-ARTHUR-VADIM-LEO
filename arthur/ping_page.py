@@ -2,6 +2,7 @@ import tkinter as tk
 import subprocess
 import platform
 import threading
+import re
 
 class PingPage:
     def __init__(self, root, app):
@@ -63,7 +64,7 @@ class PingPage:
         self.manual_radio.grid(row=0, column=0, padx=10, pady=5, sticky="w")  # Aligner à gauche (w pour west)
         
         self.file_radio = tk.Radiobutton(self.method_frame, 
-                                         text="Depuis un fichier", 
+                                         text="Depuis le fichier ./resultats/scanned_ips.txt", 
                                          variable=self.method_var, 
                                          value="fichier", 
                                          fg="white", 
@@ -115,6 +116,9 @@ class PingPage:
         ip = self.ip_entry.get() if self.method_var.get() == "manuel" else self.selected_ip.get()
 
         if ip:
+            # Effacer les anciennes entrées avant de commencer un nouveau test
+            self.result_text.delete(1.0, tk.END)  # Effacer le contenu du widget Text
+
             # Utiliser un thread pour exécuter la commande de ping sans bloquer l'interface
             thread = threading.Thread(target=self.execute_ping, args=(ip,))
             thread.start()
@@ -131,8 +135,8 @@ class PingPage:
             else:
                 command = ["ping", "-c", "3", ip]
 
-            # Exécuter la commande de ping
-            result = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True)
+            # Utiliser l'encodage ISO-8859-1 pour Windows ou autre système avec des caractères spéciaux
+            result = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True, encoding="iso-8859-1")
 
             # Lire les sorties ligne par ligne et les afficher en temps réel
             for line in result.stdout:
@@ -153,8 +157,9 @@ class PingPage:
 
     def clean_ping_output(self, line):
         """Nettoyer la sortie de la commande ping pour supprimer les caractères indésirables"""
-        # Supprimer les caractères non imprimables ou indésirables
-        return ''.join(char if char.isprintable() else ' ' for char in line)
+        # Nettoyer les caractères indésirables tout en gardant les caractères valides
+        line = re.sub(r'[^\x20-\x7E]', ' ', line)  # Remplacer les caractères de contrôle (non imprimables) par un espace
+        return line
 
     def update_result(self, result):
         """Met à jour le widget Text avec le résultat du ping"""
