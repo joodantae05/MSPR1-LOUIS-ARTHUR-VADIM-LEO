@@ -12,7 +12,7 @@ class PingPage:
         self.ping_label.pack(pady=30)  # Espacement pour donner de l'air autour du titre
 
         # Ajouter un label pour l'adresse IP ou le domaine à tester (initialement vide)
-        self.ip_label = tk.Label(self.frame, text="Adresse IP ou domaine: (Ex: 8.8.8.8)", fg="white", bg="#1E1E2D", font=("Arial", 14))
+        self.ip_label = tk.Label(self.frame, text="Adresse IP", fg="white", bg="#1E1E2D", font=("Arial", 14))
         self.ip_label.pack(pady=10)
 
         # Champ de saisie pour l'adresse IP ou domaine

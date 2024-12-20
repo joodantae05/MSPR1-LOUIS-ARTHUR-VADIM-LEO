@@ -8,12 +8,14 @@ import time
 
 from scan import scan_network, scan_ports  # Import des fonctions de scan
 from dashboard_page import DashboardPage  # Import de la classe DashboardPage
+from stats_page import StatsPage  # Import de la classe StatsPage
 
 class HomePage:
-    def __init__(self, root, app, dashboard):
+    def __init__(self, root, app, dashboard, stats_page):
         self.root = root
         self.app = app
         self.dashboard = dashboard
+        self.stats_page = stats_page  # Ajoutez la référence à StatsPage
         self.root.config(bg="#1E1E2D")  # Couleur de fond sombre
 
         # Créer le cadre principal
@@ -36,6 +38,11 @@ class HomePage:
         self.status_label.pack(pady=10)  # Espacement vertical
 
         self.times_per_host = []  # Liste des temps de scan par hôte pour ajuster les estimations
+
+        # Variables pour les statistiques
+        self.total_scans = 0
+        self.avg_scan_time = 0
+        self.most_vulnerable_host = "Aucun"
 
     def show(self):
         self.frame.pack(fill='both', expand=True)
@@ -103,6 +110,14 @@ class HomePage:
         self.dashboard.show_results(self.machine_info)  # Afficher les résultats sur le tableau de bord
         self.button.config(state="normal")  # Réactiver le bouton à la fin du scan
 
+        # Calcul des statistiques
+        self.total_scans += 1
+        self.avg_scan_time = round(sum(self.times_per_host) / len(self.times_per_host), 2) if self.times_per_host else 0
+        self.most_vulnerable_host = self.calculate_most_vulnerable_host()  # Exemple de méthode pour déterminer l'hôte vulnérable
+
+        # Mise à jour des statistiques dans StatsPage
+        self.stats_page.update_stats(self.total_scans, self.avg_scan_time, self.most_vulnerable_host)
+
     def update_dashboard(self, machine_info):
         self.machine_info = machine_info  # Stocker les résultats pour les afficher dans DashboardPage
 
@@ -158,3 +173,13 @@ class HomePage:
         
         # Retourner le temps restant en secondes
         return round(estimated_time_remaining)
+
+    def calculate_most_vulnerable_host(self):
+        """
+        Exemple de fonction pour déterminer l'hôte le plus vulnérable.
+        Cette fonction peut être améliorée selon vos besoins.
+        """
+        # Exemple simple, retourner le premier hôte scanné (vous pouvez ajuster cette logique)
+        if self.machine_info:
+            return self.machine_info[0][0]  # Retourne l'IP de l'hôte le plus vulnérable
+        return "Aucun"

@@ -25,10 +25,10 @@ class App:
         self.header_frame.pack(fill="x", padx=10, pady=10)  # Remplir horizontalement et espacer légèrement
 
         # Ajouter le titre à gauche
-        self.title_label = tk.Label(self.header_frame, text="Seahawks Vester", font=("Helvetica", 24, "bold"), bg="#141526", fg="#d9d7dc")
+        self.title_label = tk.Label(self.header_frame, text="Seahawks Harvester", font=("Helvetica", 24, "bold"), bg="#141526", fg="#d9d7dc")
         self.title_label.pack(side="left", padx=10)
 
-        # Créer des boutons pour les onglets à droite
+        # Créer des boutons pour naviguer entre les pages
         self.tabs_frame = tk.Frame(self.header_frame, bg="#141526")
         self.tabs_frame.pack(side="right", fill="x", padx=10)  # Remplir l'espace restant horizontalement
 
@@ -77,8 +77,8 @@ class App:
 
         # Initialiser les pages dans l'ordre correct
         self.dashboard_page = DashboardPage(self.main_frame, self)
-        self.home_page = HomePage(self.main_frame, self, self.dashboard_page)  # Maintenant self.dashboard_page est disponible
         self.stats_page = StatsPage(self.main_frame, self)
+        self.home_page = HomePage(self.main_frame, self, self.dashboard_page, self.stats_page)  # Correction ici
         self.ping_page = PingPage(self.main_frame, self)
 
         # Afficher la page d'accueil par défaut
