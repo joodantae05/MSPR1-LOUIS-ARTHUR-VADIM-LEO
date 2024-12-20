@@ -8,23 +8,23 @@ class PingPage:
     def __init__(self, root, app):
         self.root = root
         self.app = app
-        self.root.config(bg="#1E1E2D")  # Fond sombre pour toute la fenêtre
-        self.frame = tk.Frame(root, bg="#1E1E2D")  # Fond sombre également pour le cadre
+        self.root.config(bg="#2C3E50")  # Fond sombre pour toute la fenêtre
+        self.frame = tk.Frame(root, bg="#2C3E50")  # Fond sombre également pour le cadre
         self.frame.pack(fill='both', expand=True)
 
         # Titre de la page
-        self.ping_label = tk.Label(self.frame, text="Test de connectivité (Ping)", fg="white", bg="#1E1E2D", font=("Arial", 20, "bold"))
+        self.ping_label = tk.Label(self.frame, text="Test de connectivité (Ping)", fg="white", bg="#2C3E50", font=("Arial", 20, "bold"))
         self.ping_label.pack(pady=30)  # Espacement autour du titre
 
         # Frame pour les champs IP (juste en dessous du titre)
-        self.ip_frame = tk.Frame(self.frame, bg="#1E1E2D")
+        self.ip_frame = tk.Frame(self.frame, bg="#2C3E50")
         
         # Champ IP manuel
-        self.ip_entry_label = tk.Label(self.ip_frame, text="Adresse IP", fg="white", bg="#1E1E2D", font=("Arial", 14))
+        self.ip_entry_label = tk.Label(self.ip_frame, text="Adresse IP", fg="white", bg="#2C3E50", font=("Arial", 14))
         self.ip_entry = tk.Entry(self.ip_frame, font=("Arial", 14), width=30, bg="#333344", fg="white", bd=2, relief="solid")
         
         # Sélectionner l'IP depuis un fichier
-        self.ip_dropdown_label = tk.Label(self.ip_frame, text="Sélectionnez une IP à tester", fg="white", bg="#1E1E2D", font=("Arial", 14))
+        self.ip_dropdown_label = tk.Label(self.ip_frame, text="Sélectionnez une IP à tester", fg="white", bg="#2C3E50", font=("Arial", 14))
         self.selected_ip = tk.StringVar()
         
         # Menu déroulant pour sélectionner l'IP à tester
@@ -77,9 +77,9 @@ class PingPage:
 
         # Bouton pour lancer le test de ping
         self.ping_button = tk.Button(self.frame, text="Ping", command=self.run_ping,
-                                relief="flat", bd=0, font=("Arial", 16), fg="white", bg="#4A90E2",
-                                activebackground="#357ABD", activeforeground="white", width=20, height=2,
-                                highlightthickness=0, pady=10)
+                                relief="flat", bd=0, font=("Segoe UI", 16), fg="white", bg="#4A90E2",
+                                activebackground="#357ABD", activeforeground="white", width=10, height=1,
+                                highlightthickness=0, pady=8, padx=8, borderwidth=2, anchor="center")
         self.ping_button.pack(pady=20)
 
         # Widget pour afficher les résultats du ping, agrandi

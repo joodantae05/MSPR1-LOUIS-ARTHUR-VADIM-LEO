@@ -42,7 +42,7 @@ class App:
 
         # Créer un cadre pour les onglets (navigation horizontale)
         self.tabs_frame = tk.Frame(self.header_frame, bg="#1e1e2f")
-        self.tabs_frame.pack(side="right", padx=30)
+        self.tabs_frame.pack(side="right", padx=10)  # Réduire l'espace à droite
 
         # Créer les boutons de navigation
         self.home_button = self.create_tab_button(self.tabs_frame, "Home", self.show_home_page)
@@ -52,11 +52,11 @@ class App:
 
         # Label pour afficher l'heure, positionné au centre du header
         self.clock_label = tk.Label(self.header_frame, text=self.get_current_time(), font=("Helvetica", 16), bg="#1e1e2f", fg="#fff")
-        self.clock_label.pack(side="left", padx=40, expand=True)
+        self.clock_label.pack(side="right", padx=20)  # Affichage à droite des onglets
 
         # Créer un bouton "Go" central
         self.go_button = tk.Button(self.main_frame, text="Go", font=("Helvetica", 36, "bold"), command=self.animate_go_button,
-                                   bg="#1786dc", fg="#fff", bd=0, relief="flat", padx=40, pady=20, activebackground="#0a5f97")
+                                   bg="#1786dc", fg="#fff", bd=0, relief="flat", padx=15, pady=15, activebackground="#0a5f97")
         self.go_button.place(relx=0.5, rely=0.5, anchor="center")  # Centrer le bouton
 
         # Initialiser les pages
@@ -73,9 +73,9 @@ class App:
 
     def create_tab_button(self, parent, text, command):
         """Fonction pour créer un bouton de navigation avec surbrillance moderne"""
-        button = tk.Button(parent, text=text, font=("Helvetica", 14), bg="#1e1e2f", fg="#d9d7dc", bd=0, relief="flat", padx=20, pady=10,
+        button = tk.Button(parent, text=text, font=("Helvetica", 14), bg="#1e1e2f", fg="#d9d7dc", bd=0, relief="flat", padx=10, pady=10,
                            activebackground="#1786dc", activeforeground="#fff", command=command)
-        button.pack(side="left", padx=20)
+        button.pack(side="left", padx=10)  # Réduire l'espace horizontal entre les boutons
         button.bind("<Enter>", lambda event: button.config(fg="#1786dc"))
         button.bind("<Leave>", lambda event: button.config(fg="#d9d7dc"))
         return button

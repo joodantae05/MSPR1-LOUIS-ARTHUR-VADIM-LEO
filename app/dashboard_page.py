@@ -44,41 +44,42 @@ class DashboardPage:
     def __init__(self, root, app):
         self.root = root
         self.app = app
-        self.root.config(bg="#1E1E2D")  # Fond sombre
+        self.root.config(bg="#2C3E50")  # Couleur de fond plus moderne
+        
 
         # Créer un cadre principal pour la mise en page à deux colonnes
-        self.main_frame = tk.Frame(root, bg="#1E1E2D")
+        self.main_frame = tk.Frame(root, bg="#2C3E50")
         self.main_frame.pack(fill='both', expand=True, padx=40, pady=40)  # Ajouter de l'espace autour du cadre principal
 
         # Créer un cadre pour la section de gauche (Scan)
-        self.left_frame = tk.Frame(self.main_frame, bg="#1E1E2D")
+        self.left_frame = tk.Frame(self.main_frame, bg="#2C3E50")
         self.left_frame.pack(side="left", fill="y", padx=20, pady=20, expand=True)
 
         # Créer un cadre pour la section de droite (Informations système)
-        self.right_frame = tk.Frame(self.main_frame, bg="#1E1E2D")
+        self.right_frame = tk.Frame(self.main_frame, bg="#2C3E50")
         self.right_frame.pack(side="right", fill="y", padx=20, pady=20, expand=True)
 
         # Créer un cadre pour centrer le titre des résultats du scan dans la section gauche
-        self.left_title_frame = tk.Frame(self.left_frame, bg="#1E1E2D")
+        self.left_title_frame = tk.Frame(self.left_frame, bg="#2C3E50")
         self.left_title_frame.pack(fill="x", pady=10)  # Remplir toute la largeur et ajouter un peu d'espace
 
         # Ajouter un label centré pour le titre des résultats du scan
-        self.result_label = tk.Label(self.left_title_frame, text="Résultats du dernier scan", fg="white", bg="#1E1E2D", font=("Arial", 18, "bold"))
+        self.result_label = tk.Label(self.left_title_frame, text="Résultats du dernier scan", fg="white", bg="#2C3E50", font=("Arial", 18, "bold"))
         self.result_label.pack(anchor="center", padx=10, pady=20)  # Centré avec un peu d'espace
 
         # Créer un cadre pour centrer le titre des informations système dans la section droite
-        self.right_title_frame = tk.Frame(self.right_frame, bg="#1E1E2D")
+        self.right_title_frame = tk.Frame(self.right_frame, bg="#2C3E50")
         self.right_title_frame.pack(fill="x", pady=10)  # Remplir toute la largeur et ajouter un peu d'espace
 
         # Ajouter un label centré pour le titre des informations système
-        self.info_label = tk.Label(self.right_title_frame, text="Informations Système", fg="white", bg="#1E1E2D", font=("Arial", 18, "bold"))
+        self.info_label = tk.Label(self.right_title_frame, text="Informations Système", fg="white", bg="#2C3E50", font=("Arial", 18, "bold"))
         self.info_label.pack(anchor="center", padx=10, pady=20)  # Centré avec un peu d'espace
 
         # Créer un bouton pour rafraîchir les informations système
-        self.refresh_button = tk.Button(self.right_frame, text="Rafraîchir Infos Système", command=self.refresh_system_info,
-                                relief="flat", bd=0, font=("Arial", 16), fg="white", bg="#4A90E2",
-                                activebackground="#357ABD", activeforeground="white", width=20, height=2,
-                                highlightthickness=0, pady=10)
+        self.refresh_button = tk.Button(self.right_frame, text="Reset Infos Système", command=self.refresh_system_info,
+                                relief="flat", bd=0, font=("Segoe UI", 16), fg="white", bg="#4A90E2",
+                                activebackground="#357ABD", activeforeground="white", width=20, height=1,
+                                highlightthickness=0, pady=8, padx=8, borderwidth=2, anchor="center")
 
         # Initialiser les informations système et l'adresse IP locale
         self.system_info = get_system_info()

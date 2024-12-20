@@ -19,40 +19,39 @@ class HomePage:
         self.app = app
         self.dashboard = dashboard
         self.stats_page = stats_page
-        self.root.config(bg="#1E1E2D")  # Couleur de fond sombre
+        self.root.config(bg="#2C3E50")  # Couleur de fond plus moderne
 
         # Initialisation de machine_info
         self.machine_info = []
 
-        # Créer le cadre principal
-        self.frame = tk.Frame(root, bg="#1E1E2D")
-        self.frame.pack(fill='both', expand=True, padx=20, pady=20)
+        # Créer le cadre principal avec des coins arrondis
+        self.frame = tk.Frame(root, bg="#2C3E50", bd=0)
+        self.frame.pack(fill='both', expand=True, padx=30, pady=30)
 
-        # Créer le bouton cliquable pour démarrer le scan
-        # Créer le bouton cliquable pour démarrer le scan
-        # Créer le bouton cliquable pour démarrer le scan
-        # Créer le bouton cliquable pour démarrer le scan
+        # Créer le bouton cliquable pour démarrer le scan avec un style moderne
         self.button = tk.Button(self.frame, text="Démarrer le Scan", command=self.on_click,
-                                relief="solid", bd=0, font=("Arial", 16), fg="white", bg="#4A90E2",
-                                activebackground="#357ABD", activeforeground="white", width=20, height=2,
-                                highlightthickness=0, pady=10)
+                                relief="flat", bd=0, font=("Segoe UI", 16), fg="white", bg="#3498DB",
+                                activebackground="#2980B9", activeforeground="white", width=15, height=1,
+                                highlightthickness=0, pady=8, padx=8, borderwidth=2, anchor="center")
         self.button.pack(pady=20)
 
-
-        # Initialiser la barre de progression
+        # Initialiser la barre de progression avec un style moderne
         self.progress_bar = ttk.Progressbar(self.frame, orient="horizontal", length=400, mode="determinate")
+        self.progress_bar.configure(style="TProgressbar")
         self.progress_bar.pack(pady=10)
-
-        # Initialiser le label pour le statut
-        self.status_label = tk.Label(self.frame, text="Préparation du scan...", font=("Arial", 12), fg="white", bg="#1E1E2D")
-        self.status_label.pack(pady=10)
-
         self.times_per_host = []  # Liste des temps de scan par hôte pour ajuster les estimations
 
         # Variables pour les statistiques
         self.total_scans = 0
         self.avg_scan_time = 0
         self.most_vulnerable_host = "Aucun"
+
+        # Créer un style personnalisé pour la barre de progression
+        style = ttk.Style()
+        style.configure("TProgressbar",
+                        thickness=20,  # Plus épaisse
+                        length=400,
+                        barcolor="#2ECC71")  # Couleur verte
 
     def show(self):
         self.frame.pack(fill='both', expand=True)
@@ -61,7 +60,7 @@ class HomePage:
         self.frame.pack_forget()
 
     def on_click(self):
-        self.button.config(state="disabled")  # Désactiver le bouton pendant le scan
+        self.button.config(state="disabled", bg="#95A5A6", activebackground="#7F8C8D")  # Désactiver et changer la couleur
         threading.Thread(target=self.start_scan).start()  # Démarrer le scan dans un thread séparé
 
     def start_scan(self):
@@ -139,7 +138,7 @@ class HomePage:
         self.progress_bar["value"] = 100
         self.status_label.config(text="Scan terminé !\n Fichiers JSON et TXT créés dans le dossier 'resultats'")  # Mettre à jour le label pour indiquer la fin
         self.dashboard.show_results(self.machine_info)  # Afficher les résultats sur le tableau de bord
-        self.button.config(state="normal")  # Réactiver le bouton à la fin du scan
+        self.button.config(state="normal", bg="#3498DB", activebackground="#2980B9")  # Réactiver le bouton à la fin du scan
 
         # Calcul des statistiques
         self.total_scans += 1
