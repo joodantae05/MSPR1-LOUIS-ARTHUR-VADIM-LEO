@@ -1,4 +1,7 @@
 import tkinter as tk
+import platform
+import socket
+import psutil
 from datetime import datetime
 
 class DashboardPage:
@@ -18,6 +21,10 @@ class DashboardPage:
         # Ajouter un label pour l'heure et la date du scan (initialement vide)
         self.scan_time_label = tk.Label(self.frame, text="", fg="white", bg="#1E1E2D", font=("Arial", 12))
         self.scan_time_label.pack(pady=10, anchor="center")  # Centrer le label
+        
+        # Ajouter un label pour afficher les informations de la machine locale
+        self.machine_info_label = tk.Label(self.frame, text="Informations sur la machine locale", fg="white", bg="#1E1E2D", font=("Arial", 18, "bold"))
+        self.machine_info_label.pack(pady=30)
 
     def show(self):
         """Afficher la page du tableau de bord"""
@@ -91,3 +98,41 @@ class DashboardPage:
 
             for port in open_ports:
                 self.display_port_details(port, service_info, vulnerabilities)
+
+    def get_local_machine_info(self):
+        """Récupérer les informations de la machine locale"""
+        try:
+            # Nom de la machine
+            machine_name = platform.node()
+
+            # Système d'exploitation
+            os_name = platform.system()
+            os_version = platform.version()
+
+            # Adresse IP locale
+            ip_address = socket.gethostbyname(socket.gethostname())
+
+            # Informations sur les sous-réseaux
+            network_info = psutil.net_if_addrs()
+            subnets = {interface: [addr.address for addr in addresses if addr.family == psutil.AF_INET] for interface, addresses in network_info.items()}
+
+            # Affichage des informations
+            self.display_machine_info(machine_name, os_name, os_version, ip_address, subnets)
+        except Exception as e:
+            print(f"Erreur lors de la récupération des informations système: {e}")
+
+    def display_machine_info(self, machine_name, os_name, os_version, ip_address, subnets):
+        """Afficher les informations de la machine locale dans le tableau de bord"""
+        machine_name_label = tk.Label(self.frame, text=f"Nom de la machine: {machine_name}", fg="white", bg="#1E1E2D", font=("Arial", 12))
+        machine_name_label.pack(anchor="w", padx=20, pady=5)
+
+        os_label = tk.Label(self.frame, text=f"Système d'exploitation: {os_name} {os_version}", fg="white", bg="#1E1E2D", font=("Arial", 12))
+        os_label.pack(anchor="w", padx=20, pady=5)
+
+        ip_label = tk.Label(self.frame, text=f"Adresse IP: {ip_address}", fg="white", bg="#1E1E2D", font=("Arial", 12))
+        ip_label.pack(anchor="w", padx=20, pady=5)
+
+        for interface, addresses in subnets.items():
+            subnets_label = tk.Label(self.frame, text=f"Interface {interface} - Sous-réseau(s): {', '.join(addresses)}", fg="white", bg="#1E1E2D", font=("Arial", 12))
+            subnets_label.pack(anchor="w", padx=20, pady=5)
+

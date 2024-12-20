@@ -1,0 +1,62 @@
+{
+    "subnet": "192.168.1.0/24",
+    "connected_machines": 3,
+    "machines": [
+        {
+            "ip": "192.168.1.189",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
+        },
+        {
+            "ip": "192.168.1.254",
+            "open_ports": [
+                53,
+                80
+            ],
+            "service_info": {
+                "53": {
+                    "service": "domain",
+                    "version": "2.85"
+                },
+                "80": {
+                    "service": "http",
+                    "version": ""
+                }
+            },
+            "vulnerabilities": {
+                "53": {
+                    "vulners": "\n  cpe:/a:thekelleys:dnsmasq:2.85: \n    \tCVE-2023-50387\t7.5\thttps://vulners.com/cve/CVE-2023-50387\n    \tCE8366BE-F17D-552A-B1B4-C2DBD31482C0\t7.5\thttps://vulners.com/githubexploit/CE8366BE-F17D-552A-B1B4-C2DBD31482C0\t*EXPLOIT*\n    \tBB688FBF-CEE2-5DD1-8561-8F76501DE2D4\t7.5\thttps://vulners.com/githubexploit/BB688FBF-CEE2-5DD1-8561-8F76501DE2D4\t*EXPLOIT*\n    \t5EFDF373-FBD1-5C09-A612-00ADBFE574CF\t7.5\thttps://vulners.com/githubexploit/5EFDF373-FBD1-5C09-A612-00ADBFE574CF\t*EXPLOIT*\n    \tCVE-2023-28450\t0.0\thttps://vulners.com/cve/CVE-2023-28450\n    \tCVE-2022-0934\t0.0\thttps://vulners.com/cve/CVE-2022-0934\n    \t79068BEF-A572-5A8A-88D0-177524BDAAFE\t0.0\thttps://vulners.com/githubexploit/79068BEF-A572-5A8A-88D0-177524BDAAFE\t*EXPLOIT*"
+                },
+                "80": {
+                    "http-enum": "\n  /login.php: Possible admin folder\n  /robots.txt: Robots file\n",
+                    "http-csrf": "Couldn't find any CSRF vulnerabilities.",
+                    "http-stored-xss": "Couldn't find any stored XSS vulnerabilities.",
+                    "http-dombased-xss": "Couldn't find any DOM based XSS."
+                }
+            }
+        },
+        {
+            "ip": "192.168.1.54",
+            "open_ports": [
+                80
+            ],
+            "service_info": {
+                "80": {
+                    "service": "http",
+                    "version": ""
+                }
+            },
+            "vulnerabilities": {
+                "80": {
+                    "fingerprint-strings": "\n  GetRequest: \n    <!DOCTYPE HTML>\n    <html>\n    <head>\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/login.css\">\n    <meta http-equiv=\"Pragma\" content=\"no-cache\">\n    <title>NETGEAR XS724EM</title>\n    <script src=\"/login.js\" type=\"text/javascript\"></script>\n    <script src=\"/jquery.md5.js\" type=\"text/javascript\"></script>\n    <script type='text/javascript' language='JavaScript'>\n    function submitLogin()\n    encryptPwd();\n    document.forms[0].submit();\n    return true;\n    function onEnterSub(e)\n    whKey;\n    (window.event)\n    whKey = e.keyCode;\n    else if (e.which)\n    whKey = e.which;\n    if(whKey == '13')\n    submitLogin();\n    </script>\n    </head>\n    <body id=\"loginBody\" onLoad=\"document.login.Password.focus();\">\n    <form name=\"login\" method=\"post\" onSubmit=\"return false;\"\n    action=\"/redirect.ht\n  HTTPOptions: \n    HTTP/1.1 501 Method Not Implemented\n    Content-Length: 657\n    Content-Type: text/html\n    Cache-Control: no-cache\n    X-Frame-Options: SAMEORIGIN\n    X-XSS-Protection: 1; mode=block\n    X-Content-Type-Options: nosniff\n    <!DOCTYPE HTML>\n    <html>\n    <head>\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"/style.css\">\n    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">\n    <script src=\"/frame.js\" type=\"text/javascript\"></script>\n    </head>\n    <body>\n    <table class=\"detailsAreaContainer\">\n    <tr>\n    <td>\n    <table class=\"tableStyle\">\n    <tr>\n    <script>tbhdr('Http Error','httpError')</script>\n    </tr>\n    <tr>\n    class=\"paddingsubSectionBodyNone\" colspan='2'><table class=\"tableStyle\" style=\"width:745px;\">\n    <tr>\n    colspan='2'>501 Method Not Implemented</td>\n    </tr>\n    </table>\n    </td>\n    </tr>\n    </table>\n    </td>\n    </tr>\n    </table>\n    </body>\n    </html>\n    HTTP/1.1 400 Bad Request\n    Content-Leng",
+                    "http-aspnet-debug": "ERROR: Script execution failed (use -d to debug)",
+                    "http-vuln-cve2014-3704": "ERROR: Script execution failed (use -d to debug)",
+                    "http-dombased-xss": "Couldn't find any DOM based XSS.",
+                    "http-stored-xss": "Couldn't find any stored XSS vulnerabilities.",
+                    "http-csrf": "\nSpidering limited to: maxdepth=3; maxpagecount=20; withinhost=192.168.1.54\n  Found the following possible CSRF vulnerabilities: \n    \n    Path: http://192.168.1.54:80/\n    Form id: submitpwd\n    Form action: /redirect.html\n    \n    Path: http://192.168.1.54:80/redirect.html\n    Form id: \n    Form action: /homepage.html\n    \n    Path: http://192.168.1.54:80/homepage.html\n    Form id: \n    Form action: /homepage.html\n"
+                }
+            }
+        }
+    ]
+}

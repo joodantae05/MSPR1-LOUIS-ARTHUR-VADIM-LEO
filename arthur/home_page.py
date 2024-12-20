@@ -5,6 +5,8 @@ from tkinter import ttk
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 import time
+import json
+import os
 
 from scan import scan_network, scan_ports  # Import des fonctions de scan
 from dashboard_page import DashboardPage  # Import de la classe DashboardPage
@@ -117,6 +119,42 @@ class HomePage:
 
         # Mise à jour des statistiques dans StatsPage
         self.stats_page.update_stats(self.total_scans, self.avg_scan_time, self.most_vulnerable_host)
+
+        # Créer le dossier "resultats" s'il n'existe pas déjà
+        results_folder = "resultats"
+        if not os.path.exists(results_folder):
+            os.makedirs(results_folder)
+
+        # Créer les informations à sauvegarder
+        scan_data = {
+            "subnet": str(self.get_subnet(self.get_local_ip())),  # Récupérer le sous-réseau
+            "connected_machines": len(self.machine_info),
+            "machines": []
+        }
+
+        # Collecte des informations des machines scannées
+        for ip, open_ports, service_info, vulnerabilities in self.machine_info:
+            machine_data = {
+                "ip": ip,
+                "open_ports": open_ports,
+                "service_info": service_info,
+                "vulnerabilities": vulnerabilities
+            }
+            scan_data["machines"].append(machine_data)
+
+        # Enregistrement des résultats dans un fichier JSON
+        json_file_path = os.path.join(results_folder, "scan_results.json")
+        with open(json_file_path, 'w') as json_file:
+            json.dump(scan_data, json_file, indent=4)
+
+        # Créer un fichier TXT avec les adresses IP scannées
+        ip_addresses = [ip for ip, _, _, _ in self.machine_info]
+        txt_file_path = os.path.join(results_folder, "scanned_ips.txt")
+        with open(txt_file_path, 'w') as txt_file:
+            for ip in ip_addresses:
+                txt_file.write(ip + "\n")
+
+        print(f"Résultats sauvegardés dans {json_file_path} et {txt_file_path}")
 
     def update_dashboard(self, machine_info):
         self.machine_info = machine_info  # Stocker les résultats pour les afficher dans DashboardPage
