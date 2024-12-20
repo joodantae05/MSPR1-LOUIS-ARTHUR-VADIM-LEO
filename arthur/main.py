@@ -22,15 +22,15 @@ class App:
 
         # Créer un cadre pour le titre et les onglets (alignés horizontalement)
         self.header_frame = tk.Frame(self.main_frame, bg="#141526")
-        self.header_frame.pack(fill="x", padx=10, pady=10)  # Remplir horizontalement
+        self.header_frame.pack(fill="x", padx=10, pady=10)  # Remplir horizontalement et espacer légèrement
 
         # Ajouter le titre à gauche
         self.title_label = tk.Label(self.header_frame, text="Seahawks Vester", font=("Helvetica", 24, "bold"), bg="#141526", fg="#d9d7dc")
-        self.title_label.pack(side="left")
+        self.title_label.pack(side="left", padx=10)
 
         # Créer des boutons pour les onglets à droite
         self.tabs_frame = tk.Frame(self.header_frame, bg="#141526")
-        self.tabs_frame.pack(side="right")
+        self.tabs_frame.pack(side="right", fill="x", padx=10)  # Remplir l'espace restant horizontalement
 
         # Fonction pour changer la couleur du texte au survol
         def on_enter(button):
@@ -41,7 +41,7 @@ class App:
             button.config(fg="#d9d7dc")
             button.config(cursor="arrow")  # Revenir au curseur normal
 
-        # Ajouter les boutons pour naviguer entre les pages en haut à droite
+        # Ajouter les boutons pour naviguer entre les pages
         self.home_button = tk.Button(self.tabs_frame, text="Home", command=self.show_home_page, 
                                      bg="#141526", fg="#d9d7dc", font=("Helvetica", 12), bd=0,
                                      highlightthickness=0)  # Suppression de l'encadré

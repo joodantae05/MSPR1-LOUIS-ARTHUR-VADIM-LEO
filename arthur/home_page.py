@@ -1,101 +1,41 @@
+import socket
+import ipaddress
 import tkinter as tk
 from tkinter import ttk
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import subprocess
-import platform
-import ipaddress
-import socket
-import nmap
+import threading
 import time
-import sys
-import os
 
-# Fonctions de scan (copiées depuis scan.py)
-def ping(host):
-    system_platform = platform.system().lower()
-    if system_platform == "windows":
-        cmd = ['ping', '-n', '1', '-w', '50', host]
-    else:
-        cmd = ['ping', '-c', '1', '-W', '1', host]
-
-    try:
-        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=1)
-        return host
-    except subprocess.CalledProcessError:
-        return None
-    except subprocess.TimeoutExpired:
-        return None
-
-def scan_ports(host):
-    nm = nmap.PortScanner()
-    try:
-        nm.scan(hosts=host, arguments='-p 1-1024 -sV --script=vuln -T4')
-        open_ports = []
-        service_info = {}
-        vulnerabilities = {}
-
-        if 'tcp' in nm[host]:
-            for port in nm[host]['tcp']:
-                if nm[host]['tcp'][port]['state'] == 'open':
-                    service = nm[host]['tcp'][port].get('name', 'Inconnu')
-                    version = nm[host]['tcp'][port].get('version', 'Inconnue')
-                    open_ports.append(port)
-                    service_info[port] = {'service': service, 'version': version}
-                    if 'script' in nm[host]['tcp'][port]:
-                        vuln_info = nm[host]['tcp'][port]['script']
-                        vulnerabilities[port] = vuln_info
-                    else:
-                        vulnerabilities[port] = 'Aucune vulnérabilité détectée'
-
-        return host, open_ports, service_info, vulnerabilities
-    except Exception as e:
-        print(f"Erreur lors du scan des ports pour {host}: {e}")
-        return host, [], {}, {}
-
-def scan_network():
-    # Obtenir l'IP locale et détecter automatiquement le sous-réseau
-    local_ip = socket.gethostbyname(socket.gethostname())
-    network_ip = '.'.join(local_ip.split('.')[:-1]) + '.0/24'  # Génère automatiquement le sous-réseau à scanner
-    network = ipaddress.ip_network(network_ip, strict=False)
-
-    online_hosts = []
-    total_ips = sum(1 for _ in network.hosts())
-
-    with ThreadPoolExecutor(max_workers=100) as executor:
-        futures = {executor.submit(ping, str(ip)): ip for ip in network.hosts()}
-
-        for i, future in enumerate(as_completed(futures), start=1):
-            ip = future.result()
-            if ip:
-                online_hosts.append(ip)
-            sys.stdout.write(f"\rScan réseau : {i}/{total_ips} ({(i / total_ips) * 100:.2f}%)")
-            sys.stdout.flush()
-
-    return online_hosts, network
+from scan import scan_network, scan_ports  # Import des fonctions de scan
+from dashboard_page import DashboardPage  # Import de la classe DashboardPage
 
 class HomePage:
     def __init__(self, root, app, dashboard):
         self.root = root
         self.app = app
         self.dashboard = dashboard
-        self.root.config(bg="#141526")
-        self.frame = tk.Frame(root, bg="#141526")
+        self.root.config(bg="#1E1E2D")  # Couleur de fond sombre
 
-        # Créer le bouton cliquable
-        self.button = tk.Button(self.frame, text="Scan du réseau", command=self.on_click,
-                                relief="solid", bd=3, font=("Arial", 16), fg="white", bg="#333344",
-                                activebackground="#444455", activeforeground="white", highlightthickness=2,
-                                highlightbackground="white", width=20, height=2)
-        self.button.pack(pady=20)
+        # Créer le cadre principal
+        self.frame = tk.Frame(root, bg="#1E1E2D")
+        self.frame.pack(fill='both', expand=True, padx=20, pady=20)  # Espacement autour du cadre
 
-        # Animation d'effet de vague
-        self.button.bind("<Enter>", self.on_enter)
-        self.button.bind("<Leave>", self.on_leave)
+        # Créer le bouton cliquable pour démarrer le scan
+        self.button = tk.Button(self.frame, text="Démarrer le Scan", command=self.on_click,
+                                relief="flat", bd=0, font=("Arial", 16), fg="white", bg="#4A90E2",
+                                activebackground="#357ABD", activeforeground="white", width=20, height=2,
+                                highlightthickness=0, pady=10)
+        self.button.pack(pady=20)  # Centrer avec un peu d'espacement vertical
 
-        # Initialiser la barre de progression (cachée au début)
+        # Initialiser la barre de progression
         self.progress_bar = ttk.Progressbar(self.frame, orient="horizontal", length=400, mode="determinate")
-        self.progress_bar.pack(pady=10)
-        self.progress_bar.place_forget()
+        self.progress_bar.pack(pady=10)  # Espacement vertical
+
+        # Initialiser le label pour le statut
+        self.status_label = tk.Label(self.frame, text="Préparation du scan...", font=("Arial", 12), fg="white", bg="#1E1E2D")
+        self.status_label.pack(pady=10)  # Espacement vertical
+
+        self.times_per_host = []  # Liste des temps de scan par hôte pour ajuster les estimations
 
     def show(self):
         self.frame.pack(fill='both', expand=True)
@@ -104,38 +44,117 @@ class HomePage:
         self.frame.pack_forget()
 
     def on_click(self):
-        self.start_scan()
-
-    def on_enter(self, event):
-        self.button.config(highlightcolor="#555566", highlightthickness=4)
-
-    def on_leave(self, event):
-        self.button.config(highlightcolor="white", highlightthickness=2)
+        self.button.config(state="disabled")  # Désactiver le bouton pendant le scan
+        threading.Thread(target=self.start_scan).start()  # Démarrer le scan dans un thread séparé
 
     def start_scan(self):
-        self.progress_bar.place(relx=0.5, rely=0.6, anchor="center")
         self.progress_bar["value"] = 0
         self.progress_bar["maximum"] = 100
-        self.perform_scan()
+        
+        # Détecter l'adresse IP locale et déterminer le sous-réseau
+        local_ip = self.get_local_ip()
+        subnet = self.get_subnet(local_ip)
 
-    def perform_scan(self):
-        online_hosts, network = scan_network()
+        # Scan réseau et récupération des hôtes en ligne
+        online_hosts_gen, network = scan_network(str(subnet))  # Utiliser le sous-réseau détecté
+        total_ips = sum(1 for _ in network.hosts())  # Nombre total d'IP à scanner
+        
+        # Scanner les ports des machines en ligne
+        machine_info = []  # Liste pour stocker les informations des machines en ligne
+        scanned_count = 0  # Compteur pour les machines scannées
+        start_time = time.time()  # Commencer à chronométrer
 
-        machine_info = []
+        # Mise à jour périodique
+        def update_periodically():
+            elapsed_time = time.time() - start_time  # Temps écoulé
+            elapsed_time_formatted = self.format_duration(elapsed_time)
+            self.update_progress((scanned_count / len(online_hosts_gen)) * 100, elapsed_time_formatted)
+            if scanned_count < len(online_hosts_gen):
+                self.root.after(100, update_periodically)  # Mettre à jour toutes les 100ms (10 fois par seconde)
+
+        # Lancer la mise à jour périodique
+        self.root.after(100, update_periodically)
+
+        # Traitement du scan des hôtes en ligne
         with ThreadPoolExecutor(max_workers=10) as executor:
-            futures = {executor.submit(scan_ports, ip): ip for ip in online_hosts}
-            for i, future in enumerate(as_completed(futures), start=1):
+            futures = {executor.submit(scan_ports, ip): ip for ip in online_hosts_gen}
+            for future in as_completed(futures):
                 ip, open_ports, service_info, vulnerabilities = future.result()
-
-                # Ajout des résultats dans une structure pour le Dashboard
                 machine_info.append((ip, open_ports, service_info, vulnerabilities))
 
-                sys.stdout.write(f"\rScan des ports : {i}/{len(online_hosts)} ({(i / len(online_hosts)) * 100:.2f}%)")
-                sys.stdout.flush()
+                # Calculer le temps de scan de l'hôte actuel et l'ajouter à la liste
+                elapsed_time_per_host = time.time() - start_time - sum(self.times_per_host)
+                self.times_per_host.append(elapsed_time_per_host)
 
-        self.update_dashboard(machine_info)
+                scanned_count += 1  # Incrémenter le compteur des machines scannées
+
+        # Mise à jour du dashboard avec les résultats du scan
+        self.update_dashboard(machine_info) 
+        self.root.after(0, self.finish_scan)  # Appel pour terminer le scan et afficher les résultats
+
+    def update_progress(self, progress_percentage, elapsed_time):
+        """Mettre à jour la barre de progression et le label"""
+        self.progress_bar["value"] = progress_percentage
+        self.status_label.config(text=f"Scan en cours... Durée écoulée : {elapsed_time}")
+
+    def finish_scan(self):
+        self.progress_bar["value"] = 100
+        self.status_label.config(text="Scan terminé!")  # Mettre à jour le label pour indiquer la fin
+        self.dashboard.show_results(self.machine_info)  # Afficher les résultats sur le tableau de bord
+        self.button.config(state="normal")  # Réactiver le bouton à la fin du scan
 
     def update_dashboard(self, machine_info):
-        # Cette méthode met à jour le Dashboard avec les résultats du scan
-        self.dashboard.show_results(machine_info)
-        self.progress_bar.place_forget()
+        self.machine_info = machine_info  # Stocker les résultats pour les afficher dans DashboardPage
+
+    def get_local_ip(self):
+        """
+        Récupère l'adresse IP locale de la machine.
+        """
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.settimeout(0)
+        try:
+            # Se connecter à une adresse publique pour déterminer l'IP locale (exemple : Google DNS)
+            s.connect(('10.254.254.254', 1))
+            ip = s.getsockname()[0]
+        except Exception:
+            ip = '127.0.0.1'  # Si la connexion échoue, renvoyer l'IP localhost
+        finally:
+            s.close()
+        return ip
+
+    def get_subnet(self, local_ip):
+        """
+        Détermine le sous-réseau en fonction de l'adresse IP locale.
+        """
+        # Convertir l'IP locale en objet ipaddress
+        ip = ipaddress.ip_address(local_ip)
+        
+        # Calculer le sous-réseau en supposant le masque 255.255.255.0 par défaut (mask de classe C)
+        network = ipaddress.ip_network(f"{ip}/24", strict=False)
+        
+        return network
+
+    def format_duration(self, elapsed_time):
+        """
+        Formate le temps écoulé en format lisible (minutes:secondes).
+        """
+        minutes = int(elapsed_time // 60)
+        seconds = int(elapsed_time % 60)
+        return f"{minutes}m {seconds}s"
+
+    def calculate_time_remaining(self, elapsed_time, scanned_count, total_count):
+        """
+        Calcule le temps restant estimé pour le scan en fonction du temps écoulé et du nombre de machines scannées.
+        """
+        if scanned_count == 0:
+            return 0  # Éviter la division par zéro si aucune machine n'a été scannée
+
+        # Calcul du temps moyen estimé par machine basé sur les derniers hôtes scannés
+        average_time_per_host = sum(self.times_per_host) / len(self.times_per_host) if self.times_per_host else elapsed_time / scanned_count
+        
+        # Temps restant estimé pour les hôtes restants
+        remaining_hosts = total_count - scanned_count
+        estimated_time_remaining = remaining_hosts * average_time_per_host
+        
+        # Retourner le temps restant en secondes
+        return round(estimated_time_remaining)
