@@ -1,138 +1,118 @@
 import tkinter as tk
-import platform
 import socket
-import psutil
-from datetime import datetime
+import platform
 
+# Fonction pour obtenir l'adresse IP locale
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # IPv4, Datagramme (envoi de message sans connexion)
+    s.settimeout(0)
+    try:
+        s.connect(('10.254.254.254', 1))  # Utilisation d'une adresse distante non routable pour obtenir l'IP locale
+        ip = s.getsockname()[0]  # Retourne l'adresse IP de l'interface locale
+    except Exception:
+        ip = '127.0.0.1'  # En cas d'échec, retourne l'IP de loopback
+    finally:
+        s.close()
+    return ip
+
+# Fonction pour obtenir les informations du système
+def get_system_info():
+    try:
+        # Récupérer le nom de la machine (nom d'hôte)
+        vm_name = platform.node()
+        
+        # Récupérer le système d'exploitation
+        os_name = platform.system()
+        
+        # Récupérer la version du système d'exploitation
+        os_version = platform.release()
+        
+        # Organiser toutes les informations dans un dictionnaire
+        system_info = {
+            "Nom de la machine": vm_name,
+            "Système d'exploitation": os_name,
+            "Version du système d'exploitation": os_version,
+        }
+        return system_info
+    except Exception as e:
+        # Gérer les erreurs potentielles
+        return {"Erreur": str(e)}
+
+# Création de l'interface graphique avec Tkinter
 class DashboardPage:
     def __init__(self, root, app):
         self.root = root
         self.app = app
-        self.root.config(bg="#1E1E2D")  # Fond sombre, similaire à HomePage
-        
-        # Créer le cadre principal pour le tableau de bord
-        self.frame = tk.Frame(root, bg="#1E1E2D")
-        self.frame.pack(fill='both', expand=True)  # Le frame prend toute la place
+        self.root.config(bg="#1E1E2D")  # Fond sombre
 
-        # Ajouter un label pour afficher les résultats du scan
-        self.result_label = tk.Label(self.frame, text="Résultats du dernier scan", fg="white", bg="#1E1E2D", font=("Arial", 18, "bold"))
-        self.result_label.pack(pady=30)  # Espacement pour bien séparer l'élément du haut
-        
-        # Ajouter un label pour l'heure et la date du scan (initialement vide)
-        self.scan_time_label = tk.Label(self.frame, text="", fg="white", bg="#1E1E2D", font=("Arial", 12))
-        self.scan_time_label.pack(pady=10, anchor="center")  # Centrer le label
-        
-        # Ajouter un label pour afficher les informations de la machine locale
-        self.machine_info_label = tk.Label(self.frame, text="Informations sur la machine locale", fg="white", bg="#1E1E2D", font=("Arial", 18, "bold"))
-        self.machine_info_label.pack(pady=30)
+        # Créer un cadre principal pour la mise en page à deux colonnes
+        self.main_frame = tk.Frame(root, bg="#1E1E2D")
+        self.main_frame.pack(fill='both', expand=True, padx=40, pady=40)  # Ajouter de l'espace autour du cadre principal
+
+        # Créer un cadre pour la section de gauche (Scan)
+        self.left_frame = tk.Frame(self.main_frame, bg="#1E1E2D")
+        self.left_frame.pack(side="left", fill="y", padx=20, pady=20, expand=True)
+
+        # Créer un cadre pour la section de droite (Informations système)
+        self.right_frame = tk.Frame(self.main_frame, bg="#1E1E2D")
+        self.right_frame.pack(side="right", fill="y", padx=20, pady=20, expand=True)
+
+        # Créer un cadre pour centrer le titre des résultats du scan dans la section gauche
+        self.left_title_frame = tk.Frame(self.left_frame, bg="#1E1E2D")
+        self.left_title_frame.pack(fill="x", pady=10)  # Remplir toute la largeur et ajouter un peu d'espace
+
+        # Ajouter un label centré pour le titre des résultats du scan
+        self.result_label = tk.Label(self.left_title_frame, text="Résultats du dernier scan", fg="white", bg="#1E1E2D", font=("Arial", 18, "bold"))
+        self.result_label.pack(anchor="center", padx=10, pady=20)  # Centré avec un peu d'espace
+
+        # Créer un cadre pour centrer le titre des informations système dans la section droite
+        self.right_title_frame = tk.Frame(self.right_frame, bg="#1E1E2D")
+        self.right_title_frame.pack(fill="x", pady=10)  # Remplir toute la largeur et ajouter un peu d'espace
+
+        # Ajouter un label centré pour le titre des informations système
+        self.info_label = tk.Label(self.right_title_frame, text="Informations Système", fg="white", bg="#1E1E2D", font=("Arial", 18, "bold"))
+        self.info_label.pack(anchor="center", padx=10, pady=20)  # Centré avec un peu d'espace
+
+        # Créer un bouton pour rafraîchir les informations système
+        self.refresh_button = tk.Button(self.right_frame, text="Rafraîchir Infos Système", command=self.refresh_system_info, font=("Arial", 12), bg="#4CAF50", fg="white", activebackground="#45a049", width=20, height=2)
+        self.refresh_button.pack(pady=20)
+
+        # Initialiser les informations système et l'adresse IP locale
+        self.system_info = get_system_info()
+        self.local_ip = get_local_ip()
+
+        # Afficher les informations système et l'adresse IP locale
+        self.display_system_info()
 
     def show(self):
         """Afficher la page du tableau de bord"""
-        self.frame.pack(fill='both', expand=True)
+        self.main_frame.pack(fill='both', expand=True)
 
     def hide(self):
         """Cacher la page du tableau de bord"""
-        self.frame.pack_forget()
+        self.main_frame.pack_forget()
 
-    def show_results(self, machine_info):
-        """Afficher les résultats du scan"""
-        # Récupérer l'heure et la date du lancement du scan
-        scan_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        
-        # Mettre à jour le label avec l'heure du scan
-        self.scan_time_label.config(text=f"Lancé le: {scan_time}")
-        
-        # Afficher le total de machines connectées
-        total_machines = len(machine_info)
-        total_label = tk.Label(self.frame, text=f"Total de machines connectées: {total_machines}", fg="white", bg="#1E1E2D", font=("Arial", 14))
-        total_label.pack(pady=10, anchor="center")  # Centrer le label
+    def display_system_info(self):
+        """Afficher les informations système locales"""
+        # Vider la section droite avant de réafficher les nouvelles informations
+        for widget in self.right_frame.winfo_children():
+            widget.pack_forget()
 
-        # Afficher les informations de chaque machine scannée
-        for ip, open_ports, service_info, vulnerabilities in machine_info:
-            if isinstance(ip, tuple):
-                ip = ', '.join(ip)  # Convertir les tuples en chaîne d'IP
+        # Réafficher le titre et le bouton de rafraîchissement
+        self.right_title_frame.pack(fill="x", pady=10)
+        self.refresh_button.pack(pady=20)
 
-            # Affichage de l'adresse IP de la machine
-            ip_label = tk.Label(self.frame, text=f"IP: {ip}", fg="white", bg="#1E1E2D", font=("Arial", 14, "bold"))
-            ip_label.pack(anchor="center", pady=5)  # Centrer le label
+        # Affichage des informations système dans la section droite
+        for key, value in self.system_info.items():
+            label = tk.Label(self.right_frame, text=f"{key}: {value}", fg="white", bg="#1E1E2D", font=("Arial", 12))
+            label.pack(anchor="w", pady=5, padx=20)  # Alignement à gauche avec un peu d'espace à gauche
 
-            # Affichage du système d'exploitation de la machine
-            os_label = tk.Label(self.frame, text=f"Système d'exploitation: {service_info.get('os', 'Inconnu')}", fg="white", bg="#1E1E2D", font=("Arial", 12))
-            os_label.pack(anchor="center", pady=5)  # Centrer le label
+        # Affichage de l'adresse IP locale
+        ip_label = tk.Label(self.right_frame, text=f"Adresse IP locale: {self.local_ip}", fg="white", bg="#1E1E2D", font=("Arial", 12))
+        ip_label.pack(anchor="w", pady=5, padx=20)  # Alignement à gauche avec un peu d'espace à gauche
 
-            # Affichage des ports ouverts ou aucun port ouvert
-            if not open_ports:
-                no_ports_label = tk.Label(self.frame, text="  Aucun port ouvert", fg="#FF6F61", bg="#1E1E2D", font=("Arial", 12))
-                no_ports_label.pack(anchor="center", pady=5)  # Centrer le label
-            else:
-                for port in open_ports:
-                    self.display_port_details(port, service_info, vulnerabilities)
-
-    def display_port_details(self, port, service_info, vulnerabilities):
-        """Afficher les détails des ports ouverts"""
-        service = service_info.get(port, {}).get('service', 'Inconnu')
-        version = service_info.get(port, {}).get('version', 'Inconnue')
-        vulnerabilities_text = vulnerabilities.get(port, 'Aucune vulnérabilité détectée')
-
-        # Affichage du port ouvert
-        port_label = tk.Label(self.frame, text=f"    Port {port}: {service} {version}", fg="white", bg="#1E1E2D", font=("Arial", 12))
-        port_label.pack(anchor="center", pady=5)  # Centrer le label
-
-        # Affichage des vulnérabilités associées au port
-        vuln_label = tk.Label(self.frame, text=f"    Vulnérabilités: {vulnerabilities_text}", fg="#FF6F61", bg="#1E1E2D", font=("Arial", 12))
-        vuln_label.pack(anchor="center", pady=5)  # Centrer le label
-
-    def display_ip(self, ip, service_info):
-        """Afficher les informations liées à une IP"""
-        ip_label = tk.Label(self.frame, text=f"IP: {ip}", fg="white", bg="#1E1E2D", font=("Arial", 14, "bold"))
-        ip_label.pack(anchor="center", pady=5)  # Centrer le label
-
-        os_label = tk.Label(self.frame, text=f"Système d'exploitation: {service_info.get('os', 'Inconnu')}", fg="white", bg="#1E1E2D", font=("Arial", 12))
-        os_label.pack(anchor="center", pady=5)  # Centrer le label
-
-    def display_ports(self, open_ports, service_info, vulnerabilities):
-        """Afficher les informations sur les ports ouverts"""
-        if open_ports:
-            ports_label = tk.Label(self.frame, text=f"Ports ouverts: {', '.join(map(str, open_ports))}", fg="white", bg="#1E1E2D", font=("Arial", 12))
-            ports_label.pack(anchor="center", pady=5)  # Centrer le label
-
-            for port in open_ports:
-                self.display_port_details(port, service_info, vulnerabilities)
-
-    def get_local_machine_info(self):
-        """Récupérer les informations de la machine locale"""
-        try:
-            # Nom de la machine
-            machine_name = platform.node()
-
-            # Système d'exploitation
-            os_name = platform.system()
-            os_version = platform.version()
-
-            # Adresse IP locale
-            ip_address = socket.gethostbyname(socket.gethostname())
-
-            # Informations sur les sous-réseaux
-            network_info = psutil.net_if_addrs()
-            subnets = {interface: [addr.address for addr in addresses if addr.family == psutil.AF_INET] for interface, addresses in network_info.items()}
-
-            # Affichage des informations
-            self.display_machine_info(machine_name, os_name, os_version, ip_address, subnets)
-        except Exception as e:
-            print(f"Erreur lors de la récupération des informations système: {e}")
-
-    def display_machine_info(self, machine_name, os_name, os_version, ip_address, subnets):
-        """Afficher les informations de la machine locale dans le tableau de bord"""
-        machine_name_label = tk.Label(self.frame, text=f"Nom de la machine: {machine_name}", fg="white", bg="#1E1E2D", font=("Arial", 12))
-        machine_name_label.pack(anchor="w", padx=20, pady=5)
-
-        os_label = tk.Label(self.frame, text=f"Système d'exploitation: {os_name} {os_version}", fg="white", bg="#1E1E2D", font=("Arial", 12))
-        os_label.pack(anchor="w", padx=20, pady=5)
-
-        ip_label = tk.Label(self.frame, text=f"Adresse IP: {ip_address}", fg="white", bg="#1E1E2D", font=("Arial", 12))
-        ip_label.pack(anchor="w", padx=20, pady=5)
-
-        for interface, addresses in subnets.items():
-            subnets_label = tk.Label(self.frame, text=f"Interface {interface} - Sous-réseau(s): {', '.join(addresses)}", fg="white", bg="#1E1E2D", font=("Arial", 12))
-            subnets_label.pack(anchor="w", padx=20, pady=5)
-
+    def refresh_system_info(self):
+        """Rafraîchir les informations système et l'adresse IP locale"""
+        self.system_info = get_system_info()  # Récupérer à nouveau les informations système
+        self.local_ip = get_local_ip()  # Récupérer à nouveau l'adresse IP locale
+        self.display_system_info()  # Mettre à jour l'affichage avec les nouvelles informations
