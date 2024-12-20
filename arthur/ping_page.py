@@ -1,14 +1,16 @@
-from base_page import BasePage
+import tkinter as tk
 
-class PingPage(BasePage):
+class PingPage:
     def __init__(self, root, app):
-        title = "Page de Ping"
-        tabs = {
-            "Home": self.app.show_home_page,
-            "Stats": self.app.show_stats_page,
-            "Dashboard": self.app.show_dashboard_page,
-            "Ping": self.app.show_ping_page
-        }
-        super().__init__(root, app, title, tabs)
+        self.root = root
+        self.app = app
+        self.root.config(bg="#141526")  # Changer la couleur de fond de la fenêtre en gris
+        self.frame = tk.Frame(root, bg="#141526")  # Changer la couleur de fond du cadre en gris
 
-        # Ajouter ici les éléments spécifiques à la page Ping
+    def show(self):
+        """Afficher la page"""
+        self.frame.pack(fill='both', expand=True)
+
+    def hide(self):
+        """Masquer la page"""
+        self.frame.pack_forget()
