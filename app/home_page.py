@@ -29,11 +29,15 @@ class HomePage:
         self.frame.pack(fill='both', expand=True, padx=20, pady=20)
 
         # Créer le bouton cliquable pour démarrer le scan
+        # Créer le bouton cliquable pour démarrer le scan
+        # Créer le bouton cliquable pour démarrer le scan
+        # Créer le bouton cliquable pour démarrer le scan
         self.button = tk.Button(self.frame, text="Démarrer le Scan", command=self.on_click,
-                                relief="flat", bd=0, font=("Arial", 16), fg="white", bg="#4A90E2",
+                                relief="solid", bd=0, font=("Arial", 16), fg="white", bg="#4A90E2",
                                 activebackground="#357ABD", activeforeground="white", width=20, height=2,
                                 highlightthickness=0, pady=10)
         self.button.pack(pady=20)
+
 
         # Initialiser la barre de progression
         self.progress_bar = ttk.Progressbar(self.frame, orient="horizontal", length=400, mode="determinate")
@@ -133,7 +137,7 @@ class HomePage:
 
     def finish_scan(self):
         self.progress_bar["value"] = 100
-        self.status_label.config(text="Scan terminé!")  # Mettre à jour le label pour indiquer la fin
+        self.status_label.config(text="Scan terminé !\n Fichiers JSON et TXT créés dans le dossier 'resultats'")  # Mettre à jour le label pour indiquer la fin
         self.dashboard.show_results(self.machine_info)  # Afficher les résultats sur le tableau de bord
         self.button.config(state="normal")  # Réactiver le bouton à la fin du scan
 

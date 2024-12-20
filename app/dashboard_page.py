@@ -75,16 +75,33 @@ class DashboardPage:
         self.info_label.pack(anchor="center", padx=10, pady=20)  # Centré avec un peu d'espace
 
         # Créer un bouton pour rafraîchir les informations système
-        self.refresh_button = tk.Button(self.right_frame, text="Rafraîchir Infos Système", command=self.refresh_system_info, font=("Arial", 12), bg="#4CAF50", fg="white", activebackground="#45a049", width=20, height=2)
-        self.refresh_button.pack(pady=20)
+        self.refresh_button = tk.Button(self.right_frame, text="Rafraîchir Infos Système", command=self.refresh_system_info,
+                                relief="flat", bd=0, font=("Arial", 16), fg="white", bg="#4A90E2",
+                                activebackground="#357ABD", activeforeground="white", width=20, height=2,
+                                highlightthickness=0, pady=10)
 
         # Initialiser les informations système et l'adresse IP locale
         self.system_info = get_system_info()
         self.local_ip = get_local_ip()
 
         # Initialiser la section des résultats du scan
-        self.scan_results_frame = tk.Frame(self.left_frame, bg="#1E1E2D")
-        self.scan_results_frame.pack(fill="both", padx=20, pady=20)  # Section des résultats du scan
+        self.scan_results_frame = tk.Frame(self.left_frame, bg="#1E1E2D", height=400)  # Augmenter la taille du cadre
+        self.scan_results_frame.pack(fill="both", padx=20, pady=20, expand=True)  # Section des résultats du scan
+
+        # Ajouter une barre de défilement pour la liste des IPs scannées
+        self.scrollbar = tk.Scrollbar(self.scan_results_frame)
+        self.scrollbar.pack(side="right", fill="y")
+
+        # Créer un canvas pour le défilement
+        self.canvas = tk.Canvas(self.scan_results_frame, yscrollcommand=self.scrollbar.set)
+        self.canvas.pack(side="left", fill="both", expand=True)
+
+        # Créer un cadre dans le canvas pour contenir les résultats
+        self.results_frame = tk.Frame(self.canvas, bg="#1E1E2D")
+        self.canvas.create_window((0, 0), window=self.results_frame, anchor="nw")
+
+        # Configurer la barre de défilement
+        self.scrollbar.config(command=self.canvas.yview)
 
         # Afficher les informations système et l'adresse IP locale
         self.display_system_info()
@@ -117,7 +134,6 @@ class DashboardPage:
         ip_label.pack(anchor="w", pady=5, padx=20)  # Alignement à gauche avec un peu d'espace à gauche
 
         # Affichage de l'OS local
-        # Remplacer cette ligne avec .format() pour éviter l'erreur f-string
         os_label = tk.Label(self.right_frame, text="OS: {} {}".format(
             self.system_info.get("Système d'exploitation", "Inconnu"),
             self.system_info.get("Version du système d'exploitation", "Inconnue")
@@ -141,15 +157,37 @@ class DashboardPage:
                 continue  # Si le tuple a un nombre incorrect d'éléments, passer à la machine suivante
 
             # Convertir chaque élément de 'vulnerabilities' en chaîne avant de les joindre
-            vulnerabilities_str = ', '.join(map(str, vulnerabilities)) if vulnerabilities else "Aucune vulnérabilité"
+            vulnerabilities_str = self.format_vulnerabilities(vulnerabilities)
 
-            result_text += f"IP: {self.format_ip(ip)}\n"  # Format IP plus lisible
-            result_text += f"Ports ouverts: {self.format_ports(open_ports)}\n"
-            result_text += f"Services détectés: {self.format_services(service_info)}\n"
-            result_text += f"Vulnérabilités: {vulnerabilities_str}\n\n"
+            # Ajouter l'IP dans un label avec une taille de police plus petite
+            ip_label = tk.Label(self.results_frame, text=f"IP: {self.format_ip(ip)}", fg="white", bg="#1E1E2D", font=("Arial", 10))
+            ip_label.pack(anchor="w", padx=10, pady=5)
 
-        # Mettre à jour l'affichage avec les résultats
-        self.result_label.config(text=result_text)  # Corrected reference to 'result_label'
+            ports_label = tk.Label(self.results_frame, text=f"Ports ouverts: {self.format_ports(open_ports)}", fg="white", bg="#1E1E2D", font=("Arial", 10))
+            ports_label.pack(anchor="w", padx=10, pady=5)
+
+            services_label = tk.Label(self.results_frame, text=f"Services détectés: {self.format_services(service_info)}", fg="white", bg="#1E1E2D", font=("Arial", 10))
+            services_label.pack(anchor="w", padx=10, pady=5)
+
+            vuln_label = tk.Label(self.results_frame, text=f"Vulnérabilités: {vulnerabilities_str}", fg="white", bg="#1E1E2D", font=("Arial", 10))
+            vuln_label.pack(anchor="w", padx=10, pady=5)
+
+        # Mettre à jour le canvas après ajout des widgets
+        self.results_frame.update_idletasks()
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+
+    def format_vulnerabilities(self, vulnerabilities):
+        """Formatage des vulnérabilités pour un affichage lisible"""
+        if isinstance(vulnerabilities, dict):
+            # Si les vulnérabilités sont sous forme de dictionnaire, on les affiche sous forme de clé: valeur
+            vuln_list = [f"{key}: {vuln}" for key, vuln in vulnerabilities.items()]
+            return '\n'.join(vuln_list) if vuln_list else "Aucune vulnérabilité détectée"
+        elif isinstance(vulnerabilities, list):
+            # Si les vulnérabilités sont sous forme de liste, on les joint
+            return ', '.join(vulnerabilities) if vulnerabilities else "Aucune vulnérabilité détectée"
+        else:
+            # Cas par défaut si les vulnérabilités ne sont ni une liste ni un dictionnaire
+            return "Aucune vulnérabilité détectée"
 
     def format_ip(self, ip):
         """Formatage de l'IP pour une meilleure lisibilité"""

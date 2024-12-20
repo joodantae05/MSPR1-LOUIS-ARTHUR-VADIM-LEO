@@ -13,8 +13,8 @@ class App:
         self.root.title("Seahawks Harvester")
 
         # Définir la taille de la fenêtre
-        window_width = 1200  # Augmenter la largeur
-        window_height = 800  # Augmenter la hauteur
+        window_width = 1200
+        window_height = 800
 
         # Centrer la fenêtre
         screen_width = self.root.winfo_screenwidth()
@@ -26,75 +26,43 @@ class App:
 
         # Appliquer la géométrie de la fenêtre et la position centrale
         self.root.geometry(f'{window_width}x{window_height}+{position_right}+{position_top}')
-        self.root.config(bg="#141526")  # Couleur de fond #141526
-        
-        # Créer un cadre pour l'ensemble du contenu avec un fond uniforme
-        self.main_frame = tk.Frame(self.root, bg="#141526")
-        self.main_frame.pack(fill="both", expand=True)  # Ce cadre occupe tout l'espace disponible
+        self.root.config(bg="#1e1e2f")  # Arrière-plan sombre moderne
 
-        # Créer un cadre pour le titre et les onglets (alignés horizontalement)
-        self.header_frame = tk.Frame(self.main_frame, bg="#141526")
-        self.header_frame.pack(fill="x", padx=10, pady=10)  # Remplir horizontalement et espacer légèrement
+        # Créer un cadre principal pour le contenu
+        self.main_frame = tk.Frame(self.root, bg="#1e1e2f")
+        self.main_frame.pack(fill="both", expand=True)
 
-        # Ajouter le titre à gauche
-        self.title_label = tk.Label(self.header_frame, text="Seahawks Harvester", font=("Helvetica", 24, "bold"), bg="#141526", fg="#d9d7dc")
-        self.title_label.pack(side="left", padx=10)
+        # Créer un cadre pour le header (titre + onglets)
+        self.header_frame = tk.Frame(self.main_frame, bg="#1e1e2f")
+        self.header_frame.pack(fill="x", pady=(20, 10), padx=30)
 
-        # Créer des boutons pour naviguer entre les pages
-        self.tabs_frame = tk.Frame(self.header_frame, bg="#141526")
-        self.tabs_frame.pack(side="right", fill="x", padx=10)  # Remplir l'espace restant horizontalement
+        # Ajouter un titre centré
+        self.title_label = tk.Label(self.header_frame, text="Seahawks Harvester", font=("Helvetica", 28, "bold"), bg="#1e1e2f", fg="#fff")
+        self.title_label.pack(side="left", padx=20)
 
-        # Fonction pour changer la couleur du texte au survol
-        def on_enter(button):
-            button.config(fg="#1786dc")
-            button.config(cursor="hand2")  # Changer le curseur au survol
+        # Créer un cadre pour les onglets (navigation horizontale)
+        self.tabs_frame = tk.Frame(self.header_frame, bg="#1e1e2f")
+        self.tabs_frame.pack(side="right", padx=30)
 
-        def on_leave(button):
-            button.config(fg="#d9d7dc")
-            button.config(cursor="arrow")  # Revenir au curseur normal
+        # Créer les boutons de navigation
+        self.home_button = self.create_tab_button(self.tabs_frame, "Home", self.show_home_page)
+        self.stats_button = self.create_tab_button(self.tabs_frame, "Stats", self.show_stats_page)
+        self.dashboard_button = self.create_tab_button(self.tabs_frame, "Dashboard", self.show_dashboard_page)
+        self.ping_button = self.create_tab_button(self.tabs_frame, "Ping", self.show_ping_page)
 
-        # Ajouter les boutons pour naviguer entre les pages
-        self.home_button = tk.Button(self.tabs_frame, text="Home", command=self.show_home_page, 
-                                     bg="#141526", fg="#d9d7dc", font=("Helvetica", 12), bd=0,
-                                     highlightthickness=0)  # Suppression de l'encadré
-        self.home_button.pack(side="left", padx=10)
-        self.home_button.bind("<Enter>", lambda event: on_enter(self.home_button))
-        self.home_button.bind("<Leave>", lambda event: on_leave(self.home_button))
+        # Label pour afficher l'heure, positionné au centre du header
+        self.clock_label = tk.Label(self.header_frame, text=self.get_current_time(), font=("Helvetica", 16), bg="#1e1e2f", fg="#fff")
+        self.clock_label.pack(side="left", padx=40, expand=True)
 
-        self.stats_button = tk.Button(self.tabs_frame, text="Stats", command=self.show_stats_page, 
-                                      bg="#141526", fg="#d9d7dc", font=("Helvetica", 12), bd=0,
-                                      highlightthickness=0)  # Suppression de l'encadré
-        self.stats_button.pack(side="left", padx=10)
-        self.stats_button.bind("<Enter>", lambda event: on_enter(self.stats_button))
-        self.stats_button.bind("<Leave>", lambda event: on_leave(self.stats_button))
+        # Créer un bouton "Go" central
+        self.go_button = tk.Button(self.main_frame, text="Go", font=("Helvetica", 36, "bold"), command=self.animate_go_button,
+                                   bg="#1786dc", fg="#fff", bd=0, relief="flat", padx=40, pady=20, activebackground="#0a5f97")
+        self.go_button.place(relx=0.5, rely=0.5, anchor="center")  # Centrer le bouton
 
-        self.dashboard_button = tk.Button(self.tabs_frame, text="Dashboard", command=self.show_dashboard_page, 
-                                          bg="#141526", fg="#d9d7dc", font=("Helvetica", 12), bd=0,
-                                          highlightthickness=0)  # Suppression de l'encadré
-        self.dashboard_button.pack(side="left", padx=10)
-        self.dashboard_button.bind("<Enter>", lambda event: on_enter(self.dashboard_button))
-        self.dashboard_button.bind("<Leave>", lambda event: on_leave(self.dashboard_button))
-
-        self.ping_button = tk.Button(self.tabs_frame, text="Ping", command=self.show_ping_page, 
-                                     bg="#141526", fg="#d9d7dc", font=("Helvetica", 12), bd=0,
-                                     highlightthickness=0)  # Suppression de l'encadré
-        self.ping_button.pack(side="left", padx=10)
-        self.ping_button.bind("<Enter>", lambda event: on_enter(self.ping_button))
-        self.ping_button.bind("<Leave>", lambda event: on_leave(self.ping_button))
-
-        # Ajouter un label pour afficher l'heure au centre de la barre de navigation
-        self.clock_label = tk.Label(self.header_frame, text=self.get_current_time(), font=("Helvetica", 16), bg="#141526", fg="#d9d7dc")
-        self.clock_label.pack(side="left", padx=10, expand=True)
-
-        # Ajouter un bouton Go au centre avec animation en vague
-        self.go_button = tk.Button(self.main_frame, text="Go", font=("Helvetica", 24, "bold"), command=self.animate_go_button, 
-                                   bg="#141526", fg="#d9d7dc", bd=0, highlightthickness=0)  # Suppression de l'encadré
-        self.go_button.place(relx=0.5, rely=0.5, anchor="center")  # Placer le bouton au centre de la fenêtre
-
-        # Initialiser les pages dans l'ordre correct
+        # Initialiser les pages
         self.dashboard_page = DashboardPage(self.main_frame, self)
         self.stats_page = StatsPage(self.main_frame, self)
-        self.home_page = HomePage(self.main_frame, self, self.dashboard_page, self.stats_page)  # Correction ici
+        self.home_page = HomePage(self.main_frame, self, self.dashboard_page, self.stats_page)
         self.ping_page = PingPage(self.main_frame, self)
 
         # Afficher la page d'accueil par défaut
@@ -102,6 +70,15 @@ class App:
 
         # Mettre à jour l'heure chaque seconde
         self.update_clock()
+
+    def create_tab_button(self, parent, text, command):
+        """Fonction pour créer un bouton de navigation avec surbrillance moderne"""
+        button = tk.Button(parent, text=text, font=("Helvetica", 14), bg="#1e1e2f", fg="#d9d7dc", bd=0, relief="flat", padx=20, pady=10,
+                           activebackground="#1786dc", activeforeground="#fff", command=command)
+        button.pack(side="left", padx=20)
+        button.bind("<Enter>", lambda event: button.config(fg="#1786dc"))
+        button.bind("<Leave>", lambda event: button.config(fg="#d9d7dc"))
+        return button
 
     def get_current_time(self):
         """Retourne l'heure actuelle sous forme de chaîne"""
@@ -114,8 +91,8 @@ class App:
         self.root.after(1000, self.update_clock)  # Réactualiser toutes les 1000ms (1 seconde)
 
     def animate_go_button(self):
-        """Animation dynamique en vague pour le bouton Go"""
-        colors = ["lightblue", "lightgreen", "lightyellow", "lightcoral", "lightblue"]
+        """Animation dynamique pour le bouton Go"""
+        colors = ["#00bcd4", "#4caf50", "#ffeb3b", "#f44336", "#00bcd4"]
         for color in colors:
             self.go_button.config(bg=color)
             self.root.update()
@@ -166,15 +143,9 @@ class App:
         buttons = [self.home_button, self.stats_button, self.dashboard_button, self.ping_button]
         for button in buttons:
             if button == active_button:
-                button.config(fg="#1786dc")  # Surbrillance du bouton actif
+                button.config(fg="#fff", bg="#1786dc", bd=2)  # Surbrillance du bouton actif
             else:
-                button.config(fg="#d9d7dc")  # Réinitialiser les autres boutons
-
-        # Activer ou désactiver le curseur selon la page
-        for button in buttons:
-            button.config(cursor="arrow")  # Réinitialiser le curseur par défaut
-
-        active_button.config(cursor="hand2")  # Modifier le curseur sur l'onglet actif
+                button.config(fg="#d9d7dc", bg="#1e1e2f", bd=0)  # Réinitialiser les autres boutons
 
 if __name__ == "__main__":
     root = tk.Tk()

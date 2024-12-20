@@ -76,7 +76,10 @@ class PingPage:
         self.file_radio.grid(row=1, column=0, padx=10, pady=5, sticky="w")  # Aligner à gauche (w pour west)
 
         # Bouton pour lancer le test de ping
-        self.ping_button = tk.Button(self.frame, text="Lancer le Test Ping", command=self.run_ping, font=("Arial", 14), fg="white", bg="#4CAF50", activebackground="#45a049", width=20, height=2)
+        self.ping_button = tk.Button(self.frame, text="Ping", command=self.run_ping,
+                                relief="flat", bd=0, font=("Arial", 16), fg="white", bg="#4A90E2",
+                                activebackground="#357ABD", activeforeground="white", width=20, height=2,
+                                highlightthickness=0, pady=10)
         self.ping_button.pack(pady=20)
 
         # Widget pour afficher les résultats du ping, agrandi

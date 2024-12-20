@@ -1,10 +1,22 @@
 {
-    "scan_time": "2024-12-20 21:22:16",
-    "subnet": "172.20.10.0/24",
-    "connected_machines": 2,
+    "scan_time": "2024-12-20 21:46:39",
+    "subnet": "192.168.1.0/24",
+    "connected_machines": 4,
     "machines": [
         {
-            "ip": "172.20.10.12",
+            "ip": "192.168.1.168",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
+        },
+        {
+            "ip": "192.168.1.52",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
+        },
+        {
+            "ip": "192.168.1.189",
             "open_ports": [
                 135,
                 139,
@@ -31,24 +43,58 @@
             }
         },
         {
-            "ip": "172.20.10.1",
+            "ip": "192.168.1.254",
             "open_ports": [
-                21,
-                53
+                53,
+                80,
+                443,
+                445,
+                554
             ],
             "service_info": {
-                "21": {
-                    "service": "tcpwrapped",
-                    "version": ""
-                },
                 "53": {
                     "service": "domain",
+                    "version": "2.85"
+                },
+                "80": {
+                    "service": "http",
                     "version": ""
+                },
+                "443": {
+                    "service": "http",
+                    "version": ""
+                },
+                "445": {
+                    "service": "microsoft-ds",
+                    "version": ""
+                },
+                "554": {
+                    "service": "rtsp",
+                    "version": "1.2"
                 }
             },
             "vulnerabilities": {
-                "21": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "53": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+                "53": {
+                    "vulners": "\n  cpe:/a:thekelleys:dnsmasq:2.85: \n    \tCVE-2023-50387\t7.5\thttps://vulners.com/cve/CVE-2023-50387\n    \tCE8366BE-F17D-552A-B1B4-C2DBD31482C0\t7.5\thttps://vulners.com/githubexploit/CE8366BE-F17D-552A-B1B4-C2DBD31482C0\t*EXPLOIT*\n    \tBB688FBF-CEE2-5DD1-8561-8F76501DE2D4\t7.5\thttps://vulners.com/githubexploit/BB688FBF-CEE2-5DD1-8561-8F76501DE2D4\t*EXPLOIT*\n    \t5EFDF373-FBD1-5C09-A612-00ADBFE574CF\t7.5\thttps://vulners.com/githubexploit/5EFDF373-FBD1-5C09-A612-00ADBFE574CF\t*EXPLOIT*\n    \tCVE-2023-28450\t0.0\thttps://vulners.com/cve/CVE-2023-28450\n    \tCVE-2022-0934\t0.0\thttps://vulners.com/cve/CVE-2022-0934\n    \t79068BEF-A572-5A8A-88D0-177524BDAAFE\t0.0\thttps://vulners.com/githubexploit/79068BEF-A572-5A8A-88D0-177524BDAAFE\t*EXPLOIT*"
+                },
+                "80": {
+                    "http-dombased-xss": "Couldn't find any DOM based XSS.",
+                    "http-csrf": "Couldn't find any CSRF vulnerabilities.",
+                    "http-stored-xss": "Couldn't find any stored XSS vulnerabilities.",
+                    "http-sql-injection": "\n  Possible sqli for queries:\n    http://192.168.1.254:80/resources/css/fbx.css?v=1ed2f2d8e3ae4a6f7f23e94d92d2dd84cd8a197b%27%20OR%20sqlspider\n",
+                    "http-enum": "\n  /login.php: Possible admin folder\n  /robots.txt: Robots file\n"
+                },
+                "443": {
+                    "http-csrf": "Couldn't find any CSRF vulnerabilities.",
+                    "http-stored-xss": "Couldn't find any stored XSS vulnerabilities.",
+                    "http-dombased-xss": "Couldn't find any DOM based XSS.",
+                    "http-sql-injection": "\n  Possible sqli for queries:\n    https://192.168.1.254:443/resources/css/fbx.css?v=1ed2f2d8e3ae4a6f7f23e94d92d2dd84cd8a197b%27%20OR%20sqlspider\n",
+                    "http-enum": "\n  /login.php: Possible admin folder\n  /robots.txt: Robots file\n"
+                },
+                "445": {
+                    "fingerprint-strings": "\n  SMBProgNeg: \n    SMBr"
+                },
+                "554": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         }
     ]
