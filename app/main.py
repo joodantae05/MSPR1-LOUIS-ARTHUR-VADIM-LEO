@@ -14,7 +14,7 @@ class App:
 
         # Définir la taille de la fenêtre
         window_width = 1200
-        window_height = 800
+        window_height = 600
 
         # Centrer la fenêtre
         screen_width = self.root.winfo_screenwidth()

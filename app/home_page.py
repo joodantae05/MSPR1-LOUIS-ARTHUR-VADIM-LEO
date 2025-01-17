@@ -95,13 +95,9 @@ class HomePage:
             elapsed_time = time.time() - start_time
             elapsed_time_formatted = self.format_duration(elapsed_time)
 
-            # Calcul du temps restant
-            remaining_time = self.calculate_time_remaining(elapsed_time, scanned_count, len(online_hosts))
-            remaining_time_formatted = self.format_duration(remaining_time)
-
             # Mise à jour de la barre de progression et du label
             progress_percentage = (scanned_count / len(online_hosts)) * 100
-            self.update_progress(progress_percentage, elapsed_time_formatted, remaining_time_formatted)
+            self.update_progress(progress_percentage, elapsed_time_formatted)
 
             if scanned_count < len(online_hosts):
                 self.root.after(50, update_periodically)  # Mettre à jour toutes les 50ms
@@ -126,14 +122,13 @@ class HomePage:
         self.update_dashboard(machine_info)
         self.root.after(0, self.finish_scan)  # Appel pour terminer le scan et afficher les résultats
 
-    def update_progress(self, progress_percentage, elapsed_time, remaining_time):
+    def update_progress(self, progress_percentage, elapsed_time):
         """Mettre à jour la barre de progression et le label"""
         self.progress_bar["value"] = progress_percentage
 
         # Texte détaillé d'avancement
         progress_text = (
             f"Scan en cours... Durée écoulée : {elapsed_time} | "
-            f"Temps restant estimé : {remaining_time}"
         )
 
         # Mise à jour du label avec les nouvelles informations d'avancement
@@ -214,14 +209,6 @@ class HomePage:
         minutes = int(elapsed_time // 60)
         seconds = int(elapsed_time % 60)
         return f"{minutes}m {seconds}s"
-
-    def calculate_time_remaining(self, elapsed_time, scanned_count, total_count):
-        if scanned_count == 0:
-            return 0
-        average_time_per_host = sum(self.times_per_host) / len(self.times_per_host) if self.times_per_host else elapsed_time / scanned_count
-        remaining_hosts = total_count - scanned_count
-        estimated_time_remaining = remaining_hosts * average_time_per_host
-        return round(estimated_time_remaining)
 
     def calculate_most_vulnerable_host(self):
         if self.machine_info:
