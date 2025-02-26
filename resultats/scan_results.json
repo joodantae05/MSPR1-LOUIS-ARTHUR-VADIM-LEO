@@ -1,74 +1,33 @@
 {
-    "scan_time": "2025-02-05 09:48:49",
-    "subnet": "172.20.10.0/24",
-    "connected_machines": 2,
+    "scan_time": "2025-02-26 12:47:33",
+    "subnet": "172.20.100.0/24",
+    "connected_machines": 3,
     "machines": [
         {
-            "ip": "172.20.10.1",
-            "open_ports": [
-                21,
-                53
-            ],
-            "service_info": {
-                "21": {
-                    "service": "tcpwrapped",
-                    "version": ""
-                },
-                "53": {
-                    "service": "domain",
-                    "version": ""
-                }
-            },
-            "vulnerabilities": {
-                "21": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "53": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
-            }
+            "ip": "172.20.100.123",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
         },
         {
-            "ip": "172.20.10.3",
+            "ip": "172.20.100.106",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
+        },
+        {
+            "ip": "172.20.100.115",
             "open_ports": [
-                53,
-                135,
-                139,
-                445,
-                902,
-                912
+                80
             ],
             "service_info": {
-                "53": {
-                    "service": "domain",
+                "80": {
+                    "service": "http",
                     "version": ""
-                },
-                "135": {
-                    "service": "msrpc",
-                    "version": ""
-                },
-                "139": {
-                    "service": "netbios-ssn",
-                    "version": ""
-                },
-                "445": {
-                    "service": "microsoft-ds",
-                    "version": ""
-                },
-                "902": {
-                    "service": "vmware-auth",
-                    "version": "1.10"
-                },
-                "912": {
-                    "service": "vmware-auth",
-                    "version": "1.0"
                 }
             },
             "vulnerabilities": {
-                "53": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "135": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "139": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "445": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "902": {
-                    "ssl-ccs-injection": "No reply from server (TIMEOUT)"
-                },
-                "912": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+                "80": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         }
     ]

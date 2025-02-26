@@ -1,16 +1,13 @@
 import subprocess
 import platform
 import ipaddress
-import socket
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import time
 import nmap
-import os
-import sys
+import time
 
 def ping(host):
     """
-    Effectue un ping pour tester si l'hôte est en ligne, avec un délai réduit.
+    Effectue un ping pour tester si l'hôte est en ligne avec un délai réduit.
     """
     system_platform = platform.system().lower()
 
@@ -22,8 +19,8 @@ def ping(host):
         cmd = ['ping', '-c', '1', '-W', '1', host]  # Timeout réduit à 1 seconde pour Linux/MacOS
 
     try:
-        # Diminuer le timeout global pour accélérer
-        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=0.5)
+        # Timeout réduit à 0.3 seconde pour accélérer le ping
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=0.3)
         return host
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return None
@@ -36,9 +33,8 @@ def scan_ports(host):
     """
     nm = nmap.PortScanner()
     try:
-        # Utilisation de la plage 1-1024 pour couvrir plus de ports populaires tout en augmentant la vitesse
-        # Ne pas inclure l'option -O pour éviter de scanner l'OS
-        nm.scan(hosts=host, arguments='-p 1-1024 -sV --script=vuln -T4')  # -T4 pour la rapidité
+        # Limiter la plage de ports à 1-100 pour accélérer
+        nm.scan(hosts=host, arguments='-p 1-100 -sV -T4')  # Utilisation de T4 pour la rapidité
 
         open_ports = []
         service_info = {}
@@ -56,7 +52,6 @@ def scan_ports(host):
                     vuln_info = nm[host]['tcp'][port].get('script', 'Aucune vulnérabilité détectée')
                     vulnerabilities[port] = vuln_info
 
-        # Ne pas récupérer l'OS, donc on ne retourne plus `os_info`
         return host, open_ports, service_info, vulnerabilities
 
     except nmap.nmap.PortScannerError as e:
@@ -76,9 +71,8 @@ def scan_network(network_ip):
     total_ips = sum(1 for _ in network.hosts())  # Total d'IP à scanner
 
     # Dynamiser le nombre de threads en fonction du nombre d'hôtes à scanner
-    max_workers = min(100, total_ips // 10)  # Limiter les threads pour éviter la surcharge
+    max_workers = min(50, total_ips // 10)  # Limiter les threads à 50 pour éviter une surcharge
 
-    # Utiliser ThreadPoolExecutor pour ping parallèle
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {executor.submit(ping, str(ip)): ip for ip in network.hosts()}
         for future in as_completed(futures):
@@ -108,12 +102,12 @@ def display_machine_info(ip, open_ports, service_info, vulnerabilities):
 
 def optimized_scan(network_ip):
     """
-    Effectue un scan optimisé du réseau avec un nombre accru de threads et des plages de ports élargies.
+    Effectue un scan optimisé du réseau avec un nombre accru de threads et des plages de ports réduites.
     """
     online_hosts, network = scan_network(network_ip)
     
     # Utilisation de ThreadPoolExecutor pour scanner les ports en parallèle sur chaque hôte trouvé
-    with ThreadPoolExecutor(max_workers=20) as executor:  # Utilisation de plus de threads pour le scan des ports
+    with ThreadPoolExecutor(max_workers=10) as executor:  # Limité à 10 threads pour le scan des ports
         futures = {executor.submit(scan_ports, host): host for host in online_hosts}
         
         for future in as_completed(futures):
