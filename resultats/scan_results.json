@@ -1,32 +1,32 @@
 {
-    "scan_time": "2025-02-26 12:47:33",
-    "subnet": "172.20.100.0/24",
-    "connected_machines": 3,
+    "scan_time": "2025-02-26 15:44:40",
+    "subnet": "192.168.1.0/24",
+    "connected_machines": 2,
     "machines": [
         {
-            "ip": "172.20.100.123",
+            "ip": "192.168.1.189",
             "open_ports": [],
             "service_info": {},
             "vulnerabilities": {}
         },
         {
-            "ip": "172.20.100.106",
-            "open_ports": [],
-            "service_info": {},
-            "vulnerabilities": {}
-        },
-        {
-            "ip": "172.20.100.115",
+            "ip": "192.168.1.254",
             "open_ports": [
+                53,
                 80
             ],
             "service_info": {
+                "53": {
+                    "service": "domain",
+                    "version": "2.85"
+                },
                 "80": {
                     "service": "http",
                     "version": ""
                 }
             },
             "vulnerabilities": {
+                "53": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "80": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         }

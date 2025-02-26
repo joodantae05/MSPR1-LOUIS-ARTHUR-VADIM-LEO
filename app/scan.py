@@ -98,18 +98,3 @@ def display_machine_info(ip, open_ports, service_info, vulnerabilities):
     else:
         print("Aucun port ouvert")
     print("--------------------------")
-
-
-def optimized_scan(network_ip):
-    """
-    Effectue un scan optimisé du réseau avec un nombre accru de threads et des plages de ports réduites.
-    """
-    online_hosts, network = scan_network(network_ip)
-    
-    # Utilisation de ThreadPoolExecutor pour scanner les ports en parallèle sur chaque hôte trouvé
-    with ThreadPoolExecutor(max_workers=10) as executor:  # Limité à 10 threads pour le scan des ports
-        futures = {executor.submit(scan_ports, host): host for host in online_hosts}
-        
-        for future in as_completed(futures):
-            host, open_ports, service_info, vulnerabilities = future.result()
-            display_machine_info(host, open_ports, service_info, vulnerabilities)

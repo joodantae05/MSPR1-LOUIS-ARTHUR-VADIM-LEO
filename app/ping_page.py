@@ -115,6 +115,9 @@ class PingPage:
         ip = self.ip_entry.get() if self.method_var.get() == "manuel" else self.selected_ip.get()
 
         if ip:
+            # Désactiver le bouton pour éviter de lancer plusieurs pings
+            self.ping_button.config(state=tk.DISABLED)
+
             # Effacer les anciennes entrées avant de commencer un nouveau test
             self.result_text.config(state=tk.NORMAL)  # Permet de modifier le contenu
             self.result_text.delete(1.0, tk.END)  # Effacer le contenu du widget Text
@@ -134,26 +137,33 @@ class PingPage:
                 command = ["ping", "-n", "3", ip]
             else:
                 command = ["ping", "-c", "3", ip]
-
+    
             # Utiliser l'encodage ISO-8859-1 pour Windows ou autre système avec des caractères spéciaux
             result = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True, encoding="iso-8859-1")
-
+    
             # Lire les sorties ligne par ligne et les afficher en temps réel
             for line in result.stdout:
                 line = self.clean_ping_output(line)  # Nettoyer les caractères indésirables
-                self.root.after(0, self.update_result, f"{line.strip()}\n")
-
+                self.root.after(0, self.update_result, f"{line.strip()}\n")  # Mise à jour en temps réel
+    
             result.wait()  # Attendre que la commande de ping soit terminée
-
+    
             # Vérification du code de retour pour savoir si le ping a réussi
             if result.returncode != 0:
-                self.root.after(0, self.update_result, f"Ping échoué pour {ip}: Erreur lors de l'exécution")
+                self.root.after(0, self.update_result, f"Ping échoué pour {ip}: Erreur lors de l'exécution\n")
             else:
-                self.root.after(0, self.update_result, f"Ping terminé pour {ip}")
-
+                self.root.after(0, self.update_result, f"Ping terminé pour {ip}\n")
+    
         except Exception as e:
-            # Gestion des erreurs et mise à jour des résultats
-            self.root.after(0, self.update_result, f"Erreur pour l'IP {ip}: {str(e)}")
+            # Capture des erreurs potentielles et affichage dans le widget Text
+            error_message = f"Erreur pour l'IP {ip}: {str(e)}"
+            self.root.after(0, self.update_result, error_message)
+    
+        # Réactiver le bouton une fois que le test est terminé
+        self.root.after(0, self.ping_button.config, {'state': tk.NORMAL})
+
+
+
 
     def clean_ping_output(self, line):
         """Nettoyer la sortie de la commande ping pour supprimer les caractères indésirables"""
@@ -163,8 +173,9 @@ class PingPage:
 
     def update_result(self, result):
         """Met à jour le widget Text avec le résultat du ping"""
-        self.result_text.insert(tk.END, result)
-        self.result_text.yview(tk.END)  # Scroll down to the last line
+        self.result_text.config(state=tk.NORMAL)  # Assurer que le widget Text est modifiable
+        self.result_text.insert(tk.END, result)   # Ajouter le texte
+        self.result_text.yview(tk.END)            # Faire défiler vers le bas
         self.result_text.config(state=tk.DISABLED)  # Rendre le widget Text non modifiable après mise à jour
 
     def load_ips_from_file(self, filename):
