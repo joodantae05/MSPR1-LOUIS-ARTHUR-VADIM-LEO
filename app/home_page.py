@@ -128,7 +128,7 @@ class HomePage:
 
         # Texte détaillé d'avancement
         progress_text = (
-            f"Scan en cours... Durée écoulée : {elapsed_time} | "
+            f"Scan en cours... Durée écoulée : {elapsed_time}"
         )
 
         # Mise à jour du label avec les nouvelles informations d'avancement

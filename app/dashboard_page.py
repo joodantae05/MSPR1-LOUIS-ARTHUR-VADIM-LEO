@@ -33,10 +33,6 @@ def get_system_info():
     except Exception as e:
         return {"Erreur": str(e)}
 
-# Fonction pour simuler un scan et retourner un nombre d'hôtes connectés
-def get_connected_hosts():
-    # Simuler un nombre d'hôtes connectés (par exemple, 10 hôtes)
-    return 10
 
 # Création de l'interface graphique avec Tkinter
 class DashboardPage:
@@ -105,22 +101,18 @@ class DashboardPage:
 
         # Affichage des informations système
         for key, value in self.system_info.items():
-            label = tk.Label(self.right_frame, text=f"{key}: {value}", fg="white", bg="#1E1E2D", font=("Arial", 12))
+            label = tk.Label(self.right_frame, text=f"{key}: {value}", fg="white", bg="#2C3E50", font=("Arial", 12))
             label.pack(anchor="w", pady=5, padx=20)
 
-        ip_label = tk.Label(self.right_frame, text=f"Adresse IP locale: {self.local_ip}", fg="white", bg="#1E1E2D", font=("Arial", 12))
+        ip_label = tk.Label(self.right_frame, text=f"Adresse IP locale: {self.local_ip}", fg="white", bg="#2C3E50", font=("Arial", 12))
         ip_label.pack(anchor="w", pady=5, padx=20)
 
         os_label = tk.Label(self.right_frame, text="OS: {} {}".format(
             self.system_info.get("Système d'exploitation", "Inconnu"),
             self.system_info.get("Version du système d'exploitation", "Inconnue")
-        ), fg="white", bg="#1E1E2D", font=("Arial", 12))
+        ), fg="white", bg="#2C3E50", font=("Arial", 12))
         os_label.pack(anchor="w", pady=5, padx=20)
 
-        # Affichage du nombre d'hôtes connectés
-        hosts_connected = get_connected_hosts()
-        hosts_label = tk.Label(self.right_frame, text=f"Nombre d'hôtes connectés: {hosts_connected}", fg="white", bg="#1E1E2D", font=("Arial", 12))
-        hosts_label.pack(anchor="w", pady=5, padx=20)
 
     def refresh_system_info(self):
         self.system_info = get_system_info()
@@ -138,17 +130,17 @@ class DashboardPage:
 
             vulnerabilities_str = self.format_vulnerabilities(vulnerabilities)
 
-            ip_label = tk.Label(self.results_frame, text=f"IP: {self.format_ip(ip)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
-            ip_label.pack(anchor="w", padx=10, pady=5)
+            ip_label = tk.Label(self.results_frame, text=f"IP : {self.format_ip(ip)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
+            ip_label.pack(anchor="w", padx=20, pady=5)
 
             ports_label = tk.Label(self.results_frame, text=f"Ports ouverts: {self.format_ports(open_ports)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
-            ports_label.pack(anchor="w", padx=10, pady=5)
+            ports_label.pack(anchor="w", padx=20, pady=5)
 
             services_label = tk.Label(self.results_frame, text=f"Services détectés: {self.format_services(service_info)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
-            services_label.pack(anchor="w", padx=10, pady=5)
+            services_label.pack(anchor="w", padx=20, pady=5)
 
             vuln_label = tk.Label(self.results_frame, text=f"Vulnérabilités: {vulnerabilities_str}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
-            vuln_label.pack(anchor="w", padx=10, pady=5)
+            vuln_label.pack(anchor="w", padx=20, pady=5)
 
         self.results_frame.update_idletasks()
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
@@ -163,7 +155,7 @@ class DashboardPage:
             return "Aucune vulnérabilité détectée"
 
     def format_ip(self, ip):
-        return f"[ {ip} ]"
+        return f"{ip}"
 
     def format_ports(self, ports):
         return ', '.join([f"Port {port}" for port in ports]) if ports else "Aucun port ouvert"
