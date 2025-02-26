@@ -1,33 +1,60 @@
 {
-    "scan_time": "2025-02-26 16:07:15",
-    "subnet": "192.168.1.0/24",
+    "scan_time": "2025-02-26 16:32:50",
+    "subnet": "172.20.10.0/24",
     "connected_machines": 2,
     "machines": [
         {
-            "ip": "192.168.1.189",
-            "open_ports": [],
-            "service_info": {},
-            "vulnerabilities": {}
-        },
-        {
-            "ip": "192.168.1.254",
+            "ip": "172.20.10.12",
             "open_ports": [
-                53,
-                80
+                135,
+                139,
+                445
             ],
             "service_info": {
-                "53": {
-                    "service": "domain",
-                    "version": "2.85"
+                "135": {
+                    "service": "msrpc",
+                    "version": ""
                 },
-                "80": {
-                    "service": "http",
+                "139": {
+                    "service": "netbios-ssn",
+                    "version": ""
+                },
+                "445": {
+                    "service": "microsoft-ds",
                     "version": ""
                 }
             },
             "vulnerabilities": {
+                "135": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "139": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "445": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
+        },
+        {
+            "ip": "172.20.10.1",
+            "open_ports": [
+                21,
+                53,
+                62078
+            ],
+            "service_info": {
+                "21": {
+                    "service": "tcpwrapped",
+                    "version": ""
+                },
+                "53": {
+                    "service": "domain",
+                    "version": ""
+                },
+                "62078": {
+                    "service": "iphone-sync",
+                    "version": ""
+                }
+            },
+            "vulnerabilities": {
+                "21": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "53": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "80": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+                "62078": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         }
     ]

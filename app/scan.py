@@ -33,8 +33,7 @@ def scan_ports(host):
     """
     nm = nmap.PortScanner()
     try:
-        # Limiter la plage de ports à 1-100 pour accélérer
-        nm.scan(hosts=host, arguments='-p 1-100 -sV -T4')  # Utilisation de T4 pour la rapidité
+        nm.scan(hosts=host, arguments=' -sV -T4')  # Utilisation de T4 pour la rapidité
 
         open_ports = []
         service_info = {}

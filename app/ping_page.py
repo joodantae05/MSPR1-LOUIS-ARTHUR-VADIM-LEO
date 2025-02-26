@@ -6,15 +6,16 @@ import re
 
 class PingPage:
     def __init__(self, root, app):
+        """Initialisation de la page de test de connectivité (Ping)"""
         self.root = root
         self.app = app
         self.root.config(bg="#2C3E50")  # Fond sombre pour toute la fenêtre
-        self.frame = tk.Frame(root, bg="#2C3E50")  # Fond sombre également pour le cadre
+        self.frame = tk.Frame(root, bg="#2C3E50")  # Fond sombre pour le cadre
         self.frame.pack(fill='both', expand=True, padx=30, pady=30)
 
         # Titre de la page
         self.ping_label = tk.Label(self.frame, text="Test de connectivité (Ping)", fg="white", bg="#2C3E50", font=("Arial", 20, "bold"))
-        self.ping_label.pack(pady=10)  # Espacement autour du titre
+        self.ping_label.pack(pady=10)
 
         # Frame pour les champs IP
         self.ip_frame = tk.Frame(self.frame, bg="#2C3E50")
@@ -161,9 +162,6 @@ class PingPage:
     
         # Réactiver le bouton une fois que le test est terminé
         self.root.after(0, self.ping_button.config, {'state': tk.NORMAL})
-
-
-
 
     def clean_ping_output(self, line):
         """Nettoyer la sortie de la commande ping pour supprimer les caractères indésirables"""
