@@ -1,8 +1,14 @@
 {
-    "scan_time": "2025-02-27 10:43:30",
+    "scan_time": "2025-02-27 14:11:03",
     "subnet": "172.20.100.0/24",
-    "connected_machines": 3,
+    "connected_machines": 5,
     "machines": [
+        {
+            "ip": "172.20.100.125",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
+        },
         {
             "ip": "172.20.100.123",
             "open_ports": [
@@ -28,6 +34,69 @@
                 "135": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "139": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "445": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
+        },
+        {
+            "ip": "172.20.100.112",
+            "open_ports": [
+                135,
+                139,
+                445,
+                902,
+                912,
+                3306,
+                5060,
+                5061,
+                7070
+            ],
+            "service_info": {
+                "135": {
+                    "service": "msrpc",
+                    "version": ""
+                },
+                "139": {
+                    "service": "netbios-ssn",
+                    "version": ""
+                },
+                "445": {
+                    "service": "microsoft-ds",
+                    "version": ""
+                },
+                "902": {
+                    "service": "vmware-auth",
+                    "version": "1.10"
+                },
+                "912": {
+                    "service": "vmware-auth",
+                    "version": "1.0"
+                },
+                "3306": {
+                    "service": "mysql",
+                    "version": ""
+                },
+                "5060": {
+                    "service": "sip",
+                    "version": "3.21.6"
+                },
+                "5061": {
+                    "service": "sip-tls",
+                    "version": ""
+                },
+                "7070": {
+                    "service": "realserver",
+                    "version": ""
+                }
+            },
+            "vulnerabilities": {
+                "135": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "139": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "445": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "902": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "912": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "3306": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "5060": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "5061": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "7070": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         },
         {

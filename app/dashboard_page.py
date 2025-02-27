@@ -33,7 +33,6 @@ def get_system_info():
     except Exception as e:
         return {"Erreur": str(e)}
 
-
 # Création de l'interface graphique avec Tkinter
 class DashboardPage:
     def __init__(self, root, app):
@@ -55,6 +54,13 @@ class DashboardPage:
 
         self.result_label = tk.Label(self.left_title_frame, text="Résultats du dernier scan", fg="white", bg="#2C3E50", font=("Arial", 18, "bold"))
         self.result_label.pack(anchor="center", padx=10, pady=20)
+
+        # Ajout des labels pour le nombre de machines et la date du dernier scan
+        self.total_machines_label = tk.Label(self.left_frame, text="Nombre total de machines connectées: 0", fg="white", bg="#2C3E50", font=("Arial", 12))
+        self.total_machines_label.pack(anchor="w", padx=20)
+
+        self.last_scan_date_label = tk.Label(self.left_frame, text="Date du dernier scan: Aucun", fg="white", bg="#2C3E50", font=("Arial", 12))
+        self.last_scan_date_label.pack(anchor="w", padx=20)
 
         self.right_title_frame = tk.Frame(self.right_frame, bg="#2C3E50")
         self.right_title_frame.pack(fill="x", pady=10)
@@ -95,24 +101,24 @@ class DashboardPage:
     def display_system_info(self):
         for widget in self.right_frame.winfo_children():
             widget.pack_forget()
-
+    
         self.right_title_frame.pack(fill="x", pady=10)
         self.refresh_button.pack(pady=20)
-
+    
         # Affichage des informations système
         for key, value in self.system_info.items():
-            label = tk.Label(self.right_frame, text=f"{key}: {value}", fg="white", bg="#2C3E50", font=("Arial", 12))
-            label.pack(anchor="w", pady=5, padx=20)
-
+            if key not in ["Système d'exploitation", "Version du système d'exploitation"]:  # Exclure ces deux clés
+                label = tk.Label(self.right_frame, text=f"{key}: {value}", fg="white", bg="#2C3E50", font=("Arial", 12))
+                label.pack(anchor="w", pady=5, padx=20)
+    
         ip_label = tk.Label(self.right_frame, text=f"Adresse IP locale: {self.local_ip}", fg="white", bg="#2C3E50", font=("Arial", 12))
         ip_label.pack(anchor="w", pady=5, padx=20)
-
-        os_label = tk.Label(self.right_frame, text="OS: {} {}".format(
-            self.system_info.get("Système d'exploitation", "Inconnu"),
-            self.system_info.get("Version du système d'exploitation", "Inconnue")
-        ), fg="white", bg="#2C3E50", font=("Arial", 12))
+    
+        # Affichage de l'OS et de la version
+        os_name = self.system_info.get("Système d'exploitation", "Inconnu")
+        os_version = self.system_info.get("Version du système d'exploitation", "Inconnue")
+        os_label = tk.Label(self.right_frame, text=f"OS: {os_name} {os_version}", fg="white", bg="#2C3E50", font=("Arial", 12))
         os_label.pack(anchor="w", pady=5, padx=20)
-
 
     def refresh_system_info(self):
         self.system_info = get_system_info()
@@ -121,6 +127,14 @@ class DashboardPage:
 
     def show_results(self, machine_info):
         result_text = f"Scan effectué à {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+
+        # Calcul du nombre de machines et de la date du dernier scan
+        total_machines = len(machine_info)
+        last_scan_date = time.strftime('%Y-%m-%d %H:%M:%S')
+
+        # Mise à jour des labels avec les informations du scan
+        self.total_machines_label.config(text=f"Nombre total de machines connectées: {total_machines}")
+        self.last_scan_date_label.config(text=f"Date du dernier scan: {last_scan_date}")
 
         for machine in machine_info:
             if len(machine) == 4:

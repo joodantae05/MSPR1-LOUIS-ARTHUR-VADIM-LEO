@@ -18,7 +18,7 @@ class App:
         self.main_frame = tk.Frame(self.root, bg="#121212")
         self.main_frame.pack(fill="both", expand=True)
 
-        self.title_label = tk.Label(self.main_frame, text="Seahawks Harvester", font=("Helvetica", 24, "bold"), bg="#1e1e2f", fg="#fff")
+        self.title_label = tk.Label(self.main_frame, text="Seahawks Harvester", font=("Helvetica", 24, "bold"), bg="#2c3e50", fg="#fff")
         self.title_label.pack(pady=30)
 
         self.footer_frame = tk.Frame(self.main_frame, bg="#121212")

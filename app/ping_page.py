@@ -17,27 +17,26 @@ class PingPage:
         self.ping_label = tk.Label(self.frame, text="Test de connectivité (Ping)", fg="white", bg="#2C3E50", font=("Arial", 20, "bold"))
         self.ping_label.pack(pady=10)
 
-        # Frame pour les champs IP
+        # Frame pour l'adresse IP
         self.ip_frame = tk.Frame(self.frame, bg="#2C3E50")
-        
         # Champ IP manuel
         self.ip_entry_label = tk.Label(self.ip_frame, text="Adresse IP", fg="white", bg="#2C3E50", font=("Arial", 14))
         self.ip_entry = tk.Entry(self.ip_frame, font=("Arial", 14), width=30, bg="#333344", fg="white", bd=2, relief="solid")
         
-        # Menu déroulant pour sélectionner une IP depuis un fichier
-        self.ip_dropdown_label = tk.Label(self.ip_frame, text="Sélectionner une IP (fichier)", fg="white", bg="#2C3E50", font=("Arial", 14))
-        self.selected_ip = tk.StringVar()
-
         # Ajouter les éléments à la frame
-        self.ip_entry_label.pack(pady=5)
-        self.ip_entry.pack(pady=10)
+        self.ip_entry_label.grid(row=0, column=0, pady=5, padx=5)
+        self.ip_entry.grid(row=0, column=1, pady=10, padx=5)
         
         # Placer la frame IP après le titre
         self.ip_frame.pack(pady=20)
 
+        # Frame pour le choix de la méthode et le bouton de ping
+        self.method_ping_frame = tk.Frame(self.frame, bg="#2C3E50")
+        self.method_ping_frame.pack(pady=10, fill="x", expand=True)
+
         # Frame pour le choix de la méthode
-        self.method_frame = tk.Frame(self.frame, bg="#2C2C3C", bd=5, relief="groove")
-        self.method_frame.pack(padx=20, pady=20, fill='x', expand=False)
+        self.method_frame = tk.Frame(self.method_ping_frame, bg="#2C2C3C", bd=5, relief="groove")
+        self.method_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
         # Choisir la méthode de test
         self.choice_label = tk.Label(self.method_frame, text="Choisir la méthode de test", fg="white", bg="#2C2C3C", font=("Arial", 14))
@@ -71,15 +70,26 @@ class PingPage:
         self.file_radio.grid(row=2, column=0, padx=10, pady=5, sticky="w")  # Aligner à gauche
 
         # Bouton pour lancer le test de ping
-        self.ping_button = tk.Button(self.frame, text="Lancer le Ping", command=self.run_ping,
+        self.ping_button = tk.Button(self.method_ping_frame, text="Lancer le Ping", command=self.run_ping,
                                      relief="flat", bd=0, font=("Segoe UI", 16), fg="white", bg="#4A90E2",
                                      activebackground="#357ABD", activeforeground="white", width=15, height=1,
                                      highlightthickness=0, pady=8, padx=8, borderwidth=2, anchor="center")
-        self.ping_button.pack(pady=20)
+        self.ping_button.grid(row=0, column=1, padx=10)
 
         # Widget pour afficher les résultats du ping
-        self.result_text = tk.Text(self.frame, height=10, width=50, font=("Arial", 12), bg="#333344", fg="white", wrap="word", state=tk.DISABLED)
-        self.result_text.pack(pady=10, padx=20)  # Ajout de padding horizontal
+        self.result_text = tk.Text(self.method_ping_frame, height=10, width=50, font=("Arial", 12), bg="#333344", fg="white", wrap="word", state=tk.DISABLED)
+        self.result_text.grid(row=0, column=2, padx=10, pady=10)
+
+        # Frame pour sélectionner l'IP à partir du fichier
+        self.ip_dropdown_frame = tk.Frame(self.frame, bg="#2C3E50")
+        self.ip_dropdown_frame.pack(pady=10, fill="x", expand=True)
+        
+        # Sélectionner une IP depuis un fichier
+        self.selected_ip = tk.StringVar()
+        ip_list = self.load_ips_from_file("resultats/scanned_ips.txt")
+        self.ip_dropdown = tk.OptionMenu(self.ip_dropdown_frame, self.selected_ip, *ip_list)
+        self.ip_dropdown.config(width=30, font=("Arial", 14), bg="#333344", fg="white", bd=2, relief="solid", highlightthickness=0)
+        self.ip_dropdown.pack(pady=10)
 
         # Initialiser l'interface en fonction du choix
         self.update_ui()
@@ -98,18 +108,17 @@ class PingPage:
 
         # Réinitialiser la frame IP avant de reconfigurer
         for widget in self.ip_frame.winfo_children():
-            widget.pack_forget()
+            widget.grid_forget()
 
         if method == "manuel":
             # Afficher le champ pour saisir l'adresse IP
-            self.ip_entry_label.pack(pady=5)
-            self.ip_entry.pack(pady=10)
+            self.ip_entry_label.grid(row=0, column=0, pady=5, padx=5)
+            self.ip_entry.grid(row=0, column=1, pady=10, padx=5)
+            self.ip_dropdown_frame.pack_forget()
         else:
             # Afficher le champ pour sélectionner une IP depuis un fichier
-            ip_list = self.load_ips_from_file("resultats/scanned_ips.txt")
-            self.ip_dropdown = tk.OptionMenu(self.ip_frame, self.selected_ip, *ip_list)
-            self.ip_dropdown.config(width=30, font=("Arial", 14), bg="#333344", fg="white", bd=2, relief="solid", highlightthickness=0)
-            self.ip_dropdown.pack(pady=10)
+            self.ip_dropdown_frame.pack(pady=10, fill="x", expand=True)
+            self.ip_entry.grid_forget()
 
     def run_ping(self):
         """Exécuter le test de ping dans un thread pour éviter le blocage de l'interface"""
