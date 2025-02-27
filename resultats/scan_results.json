@@ -1,20 +1,8 @@
 {
-    "scan_time": "2025-02-27 15:09:35",
+    "scan_time": "2025-02-27 15:24:14",
     "subnet": "172.20.100.0/24",
-    "connected_machines": 7,
+    "connected_machines": 3,
     "machines": [
-        {
-            "ip": "172.20.100.125",
-            "open_ports": [],
-            "service_info": {},
-            "vulnerabilities": {}
-        },
-        {
-            "ip": "172.20.100.117",
-            "open_ports": [],
-            "service_info": {},
-            "vulnerabilities": {}
-        },
         {
             "ip": "172.20.100.123",
             "open_ports": [
@@ -43,75 +31,17 @@
             }
         },
         {
-            "ip": "172.20.100.112",
-            "open_ports": [
-                135,
-                139,
-                445,
-                902,
-                912,
-                3306,
-                5060,
-                5061,
-                7070
-            ],
-            "service_info": {
-                "135": {
-                    "service": "msrpc",
-                    "version": ""
-                },
-                "139": {
-                    "service": "netbios-ssn",
-                    "version": ""
-                },
-                "445": {
-                    "service": "microsoft-ds",
-                    "version": ""
-                },
-                "902": {
-                    "service": "vmware-auth",
-                    "version": "1.10"
-                },
-                "912": {
-                    "service": "vmware-auth",
-                    "version": "1.0"
-                },
-                "3306": {
-                    "service": "mysql",
-                    "version": ""
-                },
-                "5060": {
-                    "service": "sip",
-                    "version": "3.21.6"
-                },
-                "5061": {
-                    "service": "sip-tls",
-                    "version": ""
-                },
-                "7070": {
-                    "service": "realserver",
-                    "version": ""
-                }
-            },
-            "vulnerabilities": {
-                "135": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "139": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "445": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "902": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "912": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "3306": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "5060": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "5061": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "7070": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
-            }
-        },
-        {
             "ip": "172.20.100.106",
             "open_ports": [
                 88,
                 5000,
+                5432,
                 5900,
-                7000
+                7000,
+                8000,
+                8081,
+                8082,
+                8083
             ],
             "service_info": {
                 "88": {
@@ -122,6 +52,10 @@
                     "service": "rtsp",
                     "version": ""
                 },
+                "5432": {
+                    "service": "postgresql",
+                    "version": "14.10 - 14.11"
+                },
                 "5900": {
                     "service": "vnc",
                     "version": ""
@@ -129,34 +63,34 @@
                 "7000": {
                     "service": "rtsp",
                     "version": ""
+                },
+                "8000": {
+                    "service": "http",
+                    "version": ""
+                },
+                "8081": {
+                    "service": "blackice-icecap",
+                    "version": ""
+                },
+                "8082": {
+                    "service": "http",
+                    "version": ""
+                },
+                "8083": {
+                    "service": "tcpwrapped",
+                    "version": ""
                 }
             },
             "vulnerabilities": {
                 "88": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "5000": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "5432": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "5900": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "7000": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
-            }
-        },
-        {
-            "ip": "172.20.100.100",
-            "open_ports": [
-                49152,
-                62078
-            ],
-            "service_info": {
-                "49152": {
-                    "service": "tcpwrapped",
-                    "version": ""
-                },
-                "62078": {
-                    "service": "iphone-sync",
-                    "version": ""
-                }
-            },
-            "vulnerabilities": {
-                "49152": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "62078": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+                "7000": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "8000": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "8081": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "8082": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "8083": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         },
         {

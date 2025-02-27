@@ -46,7 +46,7 @@ class PingPage:
         
         # Boutons radio pour choisir la méthode
         self.manual_radio = tk.Radiobutton(self.method_frame, 
-                                           text="Manuel (saisir l'adresse IP)", 
+                                           text="Manuel", 
                                            variable=self.method_var, 
                                            value="manuel", 
                                            fg="white", 
@@ -86,13 +86,15 @@ class PingPage:
         
         # Sélectionner une IP depuis un fichier
         self.selected_ip = tk.StringVar()
-        ip_list = self.load_ips_from_file("resultats/scanned_ips.txt")
-        self.ip_dropdown = tk.OptionMenu(self.ip_dropdown_frame, self.selected_ip, *ip_list)
+        self.ip_dropdown = tk.OptionMenu(self.ip_dropdown_frame, self.selected_ip, "")
         self.ip_dropdown.config(width=30, font=("Arial", 14), bg="#333344", fg="white", bd=2, relief="solid", highlightthickness=0)
         self.ip_dropdown.pack(pady=10)
 
         # Initialiser l'interface en fonction du choix
         self.update_ui()
+
+        # Mettre à jour les IPs toutes les 10 secondes
+        self.update_ips()
 
     def show(self):
         """Afficher la page Ping"""
@@ -195,3 +197,17 @@ class PingPage:
         except FileNotFoundError:
             self.update_result("Le fichier 'scanned_ips.txt' n'a pas été trouvé.")
             return []  # Retourner une liste vide si le fichier n'existe pas
+    
+    def update_ips(self):
+        """Met à jour la liste des IPs depuis le fichier toutes les 10 secondes"""
+        ip_list = self.load_ips_from_file("resultats/scanned_ips.txt")
+        
+        # Mettre à jour le menu déroulant
+        if ip_list:
+            menu = self.ip_dropdown["menu"]
+            menu.delete(0, "end")
+            for ip in ip_list:
+                menu.add_command(label=ip, command=tk._setit(self.selected_ip, ip))
+        
+        # Planifier la prochaine mise à jour dans 10 secondes
+        self.root.after(10000, self.update_ips)

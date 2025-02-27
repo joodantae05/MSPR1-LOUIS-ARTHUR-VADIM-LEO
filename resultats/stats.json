@@ -76,5 +76,17 @@
         "total_scans": 1,
         "temps_moyen": 19.93,
         "most_vulnerable_host": "172.20.100.125"
+    },
+    {
+        "scan_time": "2025-02-27 15:17:17",
+        "total_scans": 1,
+        "temps_moyen": 27.68,
+        "most_vulnerable_host": "172.20.100.123"
+    },
+    {
+        "scan_time": "2025-02-27 15:24:14",
+        "total_scans": 1,
+        "temps_moyen": 46.18,
+        "most_vulnerable_host": "172.20.100.123"
     }
 ]
