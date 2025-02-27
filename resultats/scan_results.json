@@ -1,10 +1,10 @@
 {
-    "scan_time": "2025-02-26 16:32:50",
-    "subnet": "172.20.10.0/24",
+    "scan_time": "2025-02-27 09:31:32",
+    "subnet": "172.20.100.0/24",
     "connected_machines": 2,
     "machines": [
         {
-            "ip": "172.20.10.12",
+            "ip": "172.20.100.123",
             "open_ports": [
                 135,
                 139,
@@ -31,30 +31,24 @@
             }
         },
         {
-            "ip": "172.20.10.1",
+            "ip": "172.20.100.115",
             "open_ports": [
-                21,
-                53,
-                62078
+                80,
+                443
             ],
             "service_info": {
-                "21": {
-                    "service": "tcpwrapped",
+                "80": {
+                    "service": "http",
                     "version": ""
                 },
-                "53": {
-                    "service": "domain",
-                    "version": ""
-                },
-                "62078": {
-                    "service": "iphone-sync",
+                "443": {
+                    "service": "https",
                     "version": ""
                 }
             },
             "vulnerabilities": {
-                "21": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "53": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "62078": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+                "80": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "443": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         }
     ]
