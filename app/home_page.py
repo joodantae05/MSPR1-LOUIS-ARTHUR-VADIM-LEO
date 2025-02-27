@@ -90,6 +90,7 @@ class HomePage:
                 ip, open_ports, service_info, vulnerabilities = future.result()
                 machine_info.append((ip, open_ports, service_info, vulnerabilities))
 
+                # Calcul du temps pour chaque hôte scanné
                 elapsed_time_per_host = time.time() - start_time - sum(self.times_per_host)
                 self.times_per_host.append(elapsed_time_per_host)
 
@@ -110,15 +111,24 @@ class HomePage:
         self.button.config(state="normal", bg="#3498DB", activebackground="#2980B9")
 
         self.total_scans += 1
-        self.avg_scan_time = round(sum(self.times_per_host) / len(self.times_per_host), 2) if self.times_per_host else 0
+
+        # Calcul du temps moyen de scan
+        if self.times_per_host:
+            self.avg_scan_time = round(sum(self.times_per_host) / len(self.times_per_host), 2)
+        else:
+            self.avg_scan_time = 0
+
         self.most_vulnerable_host = self.calculate_most_vulnerable_host()
 
+        # Mettre à jour les statistiques sur la page Stats
         self.stats_page.update_stats(self.total_scans, self.avg_scan_time, self.most_vulnerable_host)
 
+        # Enregistrement des résultats dans des fichiers JSON et TXT
         results_folder = "resultats"
         if not os.path.exists(results_folder):
             os.makedirs(results_folder)
 
+        # Créer le fichier scan_results.json pour les détails des scans
         scan_data = {
             "scan_time": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             "subnet": str(self.get_subnet(self.get_local_ip())),
@@ -139,12 +149,43 @@ class HomePage:
         with open(json_file_path, 'w') as json_file:
             json.dump(scan_data, json_file, indent=4)
 
+        # Créer ou mettre à jour le fichier stats.json avec les résumés du scan
+        summary_data = {
+            "scan_time": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "total_scans": self.total_scans,
+            "temps_moyen": self.avg_scan_time,
+            "most_vulnerable_host": self.most_vulnerable_host
+        }
+
+        stats_file_path = os.path.join(results_folder, "stats.json")
+
+        # Vérifier si le fichier stats.json existe déjà
+        if os.path.exists(stats_file_path):
+            # Si le fichier existe, on le lit et ajoute les nouvelles données
+            with open(stats_file_path, 'r') as stats_file:
+                try:
+                    existing_data = json.load(stats_file)
+                except json.JSONDecodeError:
+                    existing_data = []
+
+            # Ajouter les nouvelles données à la liste existante
+            existing_data.append(summary_data)
+
+            # Écrire les nouvelles données dans le fichier stats.json
+            with open(stats_file_path, 'w') as stats_file:
+                json.dump(existing_data, stats_file, indent=4)
+        else:
+            # Si le fichier n'existe pas, on crée un nouveau fichier avec les données
+            with open(stats_file_path, 'w') as stats_file:
+                json.dump([summary_data], stats_file, indent=4)
+
+        # Créer un fichier scanned_ips.txt pour les adresses IP scannées
         ip_addresses = [ip for ip, _, _, _ in self.machine_info]
         txt_file_path = os.path.join(results_folder, "scanned_ips.txt")
         with open(txt_file_path, 'w') as txt_file:
             for ip in ip_addresses:
                 txt_file.write(ip + "\n")
-
+                
     def update_dashboard(self, machine_info):
         self.machine_info = machine_info
 

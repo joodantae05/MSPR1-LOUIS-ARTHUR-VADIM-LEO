@@ -1,14 +1,8 @@
 {
-    "scan_time": "2025-02-27 09:55:48",
+    "scan_time": "2025-02-27 10:43:30",
     "subnet": "172.20.100.0/24",
-    "connected_machines": 4,
+    "connected_machines": 3,
     "machines": [
-        {
-            "ip": "172.20.100.111",
-            "open_ports": [],
-            "service_info": {},
-            "vulnerabilities": {}
-        },
         {
             "ip": "172.20.100.123",
             "open_ports": [
