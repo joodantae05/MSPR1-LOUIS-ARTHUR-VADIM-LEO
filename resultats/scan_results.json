@@ -1,10 +1,16 @@
 {
-    "scan_time": "2025-02-27 14:22:33",
+    "scan_time": "2025-02-27 15:09:35",
     "subnet": "172.20.100.0/24",
-    "connected_machines": 5,
+    "connected_machines": 7,
     "machines": [
         {
             "ip": "172.20.100.125",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
+        },
+        {
+            "ip": "172.20.100.117",
             "open_ports": [],
             "service_info": {},
             "vulnerabilities": {}
@@ -130,6 +136,27 @@
                 "5000": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "5900": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "7000": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
+        },
+        {
+            "ip": "172.20.100.100",
+            "open_ports": [
+                49152,
+                62078
+            ],
+            "service_info": {
+                "49152": {
+                    "service": "tcpwrapped",
+                    "version": ""
+                },
+                "62078": {
+                    "service": "iphone-sync",
+                    "version": ""
+                }
+            },
+            "vulnerabilities": {
+                "49152": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "62078": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         },
         {

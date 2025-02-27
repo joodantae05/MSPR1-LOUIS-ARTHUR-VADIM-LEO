@@ -14,12 +14,12 @@ class StatsPage:
         self.stats_label.pack(pady=30)  # Espacement pour donner de l'air autour du titre
 
         # Section de statistiques (Total scans, Temps moyen, Hôte vulnérable)
-        self.stats_frame = tk.Frame(self.frame, bg="#2C3E50", bd=5, relief="groove")
+        self.stats_frame = tk.Frame(self.frame, bg="#2C3E50")  # Retirer la bordure autour des éléments
         self.stats_frame.pack(padx=20, pady=20, fill='both', expand=True)
 
-        self.total_scans_label = self.create_stat_label("Total de scans effectués: 0")
-        self.avg_scan_time_label = self.create_stat_label("Temps moyen de scan: 0s")
-        self.most_vulnerable_host_label = self.create_stat_label("Hôte le plus vulnérable: Aucun")
+        self.total_scans_label = self.create_stat_label("Total de scans effectués : 0")
+        self.avg_scan_time_label = self.create_stat_label("Temps moyen de scan par hôte : 0s")
+        self.most_vulnerable_host_label = self.create_stat_label("Hôte le plus vulnérable : Aucun")
 
         # Variables pour le calcul des statistiques
         self.total_time = 0  # Temps total de tous les scans effectués
@@ -45,22 +45,20 @@ class StatsPage:
         # Mise à jour du temps total et du nombre de scans
         self.total_time += scan_time
         self.scan_count += 1
-    
+
         # Calcul du temps moyen de scan
-        if self.scan_count == 1:
-            # Lors du premier scan, le temps moyen est égal au temps du scan
-            avg_scan_time = scan_time
-        else:
-            # Pour les scans suivants, le temps moyen est le temps total divisé par le nombre de scans
+        if self.scan_count > 0:
             avg_scan_time = self.total_time / self.scan_count
-    
+        else:
+            avg_scan_time = 0  # Eviter la division par zéro
+
         # Mise à jour de l'hôte le plus vulnérable
         if isinstance(most_vulnerable_host, dict):
             for host, vulnerabilities in most_vulnerable_host.items():
                 if host not in self.hosts:
                     self.hosts[host] = 0
                 self.hosts[host] += vulnerabilities  # Ajout du nombre de vulnérabilités pour cet hôte
-    
+
             # Trouver l'hôte avec le plus grand nombre de vulnérabilités ou de ports ouverts
             most_vulnerable_host = max(self.hosts, key=self.hosts.get, default="Aucun")
         else:
@@ -68,8 +66,8 @@ class StatsPage:
             if most_vulnerable_host not in self.hosts:
                 self.hosts[most_vulnerable_host] = 0
             self.hosts[most_vulnerable_host] += 1  # Incrémenter le nombre de vulnérabilités pour cet hôte
-    
+
         # Mise à jour des labels avec les nouvelles valeurs
-        self.total_scans_label.config(text=f"Total de scans effectués: {total_scans}")
-        self.avg_scan_time_label.config(text=f"Temps moyen de scan: {avg_scan_time:.2f}s")
-        self.most_vulnerable_host_label.config(text=f"Hôte le plus vulnérable: {most_vulnerable_host}")
+        self.total_scans_label.config(text=f"Total de scans effectués : {total_scans}")
+        self.avg_scan_time_label.config(text=f"Temps moyen de scan par hôte : {avg_scan_time:.2f}s")
+        self.most_vulnerable_host_label.config(text=f"Hôte le plus vulnérable : {most_vulnerable_host}")
