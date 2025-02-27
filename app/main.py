@@ -8,9 +8,9 @@ class App:
     def __init__(self, root):
         self.root = root
         self.root.title("Seahawks Harvester")
-        self.root.geometry("1000x700+{}+{}".format(
-            (self.root.winfo_screenwidth() - 1000) // 2, 
-            (self.root.winfo_screenheight() - 700) // 2
+        self.root.geometry("1150x750+{}+{}".format(
+            (self.root.winfo_screenwidth() - 1150) // 2, 
+            (self.root.winfo_screenheight() - 750) // 2
         ))
         self.root.config(bg="#121212")
         self.root.resizable(False, False)

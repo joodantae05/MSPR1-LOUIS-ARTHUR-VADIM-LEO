@@ -1,8 +1,14 @@
 {
-    "scan_time": "2025-02-27 09:31:32",
+    "scan_time": "2025-02-27 09:55:48",
     "subnet": "172.20.100.0/24",
-    "connected_machines": 2,
+    "connected_machines": 4,
     "machines": [
+        {
+            "ip": "172.20.100.111",
+            "open_ports": [],
+            "service_info": {},
+            "vulnerabilities": {}
+        },
         {
             "ip": "172.20.100.123",
             "open_ports": [
@@ -28,6 +34,39 @@
                 "135": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "139": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "445": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
+        },
+        {
+            "ip": "172.20.100.106",
+            "open_ports": [
+                88,
+                5000,
+                5900,
+                7000
+            ],
+            "service_info": {
+                "88": {
+                    "service": "kerberos-sec",
+                    "version": ""
+                },
+                "5000": {
+                    "service": "rtsp",
+                    "version": ""
+                },
+                "5900": {
+                    "service": "vnc",
+                    "version": ""
+                },
+                "7000": {
+                    "service": "rtsp",
+                    "version": ""
+                }
+            },
+            "vulnerabilities": {
+                "88": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "5000": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "5900": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "7000": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         },
         {
