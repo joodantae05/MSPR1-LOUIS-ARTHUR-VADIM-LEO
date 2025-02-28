@@ -3,6 +3,7 @@ import socket
 import platform
 import time
 import subprocess
+import json
 from tkinter import messagebox
 
 # Fonction pour obtenir l'adresse IP locale
@@ -42,6 +43,25 @@ def get_last_commit_version():
         return commit_message
     except subprocess.CalledProcessError as e:
         return "Erreur lors de la récupération du commit"
+
+# Fonction pour sauvegarder les informations système dans un fichier JSON
+def save_system_info_to_json():
+    try:
+        system_info = get_system_info()
+        local_ip = get_local_ip()
+        app_version = get_last_commit_version()
+
+        # Ajouter l'IP locale et la version de l'application aux informations système
+        system_info["Adresse IP locale"] = local_ip
+        system_info["Version de l'application"] = app_version
+
+        # Sauvegarde des informations dans un fichier JSON
+        with open("./resultats/host_info.json", "w") as json_file:
+            json.dump(system_info, json_file, indent=4)
+
+        print("Les informations système ont été sauvegardées dans 'host_info.json'.")
+    except Exception as e:
+        print(f"Erreur lors de la sauvegarde des informations: {str(e)}")
 
 # Création de l'interface graphique avec Tkinter
 class DashboardPage:
@@ -134,6 +154,9 @@ class DashboardPage:
         app_version = get_last_commit_version()
         version_label = tk.Label(self.right_frame, text=f"Version de l'application: {app_version}", fg="white", bg="#2C3E50", font=("Arial", 12))
         version_label.pack(anchor="w", pady=5, padx=20)
+
+        # Sauvegarder les informations dans un fichier JSON
+        save_system_info_to_json()
 
     def refresh_system_info(self):
         self.system_info = get_system_info()
