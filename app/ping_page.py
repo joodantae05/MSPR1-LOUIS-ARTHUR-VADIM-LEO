@@ -151,7 +151,7 @@ class PingPage:
                 command = ["ping", "-c", "3", ip]
     
             # Utiliser l'encodage ISO-8859-1 pour Windows ou autre système avec des caractères spéciaux
-            result = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True, encoding="iso-8859-1")
+            result = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True, encoding="utf-16")
     
             # Lire les sorties ligne par ligne et les afficher en temps réel
             for line in result.stdout:
