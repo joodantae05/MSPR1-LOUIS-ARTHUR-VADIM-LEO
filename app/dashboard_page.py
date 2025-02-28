@@ -2,6 +2,7 @@ import tkinter as tk
 import socket
 import platform
 import time
+import subprocess
 from tkinter import messagebox
 
 # Fonction pour obtenir l'adresse IP locale
@@ -32,6 +33,15 @@ def get_system_info():
         return system_info
     except Exception as e:
         return {"Erreur": str(e)}
+
+# Fonction pour récupérer la version de l'application basée sur le dernier commit Git
+def get_last_commit_version():
+    try:
+        # Exécuter la commande git pour récupérer le dernier message de commit
+        commit_message = subprocess.check_output(["git", "log", "-1", "--pretty=%B"]).decode("utf-8").strip()
+        return commit_message
+    except subprocess.CalledProcessError as e:
+        return "Erreur lors de la récupération du commit"
 
 # Création de l'interface graphique avec Tkinter
 class DashboardPage:
@@ -119,6 +129,11 @@ class DashboardPage:
         os_version = self.system_info.get("Version du système d'exploitation", "Inconnue")
         os_label = tk.Label(self.right_frame, text=f"OS: {os_name} {os_version}", fg="white", bg="#2C3E50", font=("Arial", 12))
         os_label.pack(anchor="w", pady=5, padx=20)
+        
+        # Ajouter la version de l'application
+        app_version = get_last_commit_version()
+        version_label = tk.Label(self.right_frame, text=f"Version de l'application: {app_version}", fg="white", bg="#2C3E50", font=("Arial", 12))
+        version_label.pack(anchor="w", pady=5, padx=20)
 
     def refresh_system_info(self):
         self.system_info = get_system_info()
