@@ -16,3 +16,5 @@ scan_results.json : stocke le résultat du dernier scan effectué
 scanned_ips.txt : stocke uniquement les adresses IP pour effectuer un ping
 
 stats.json : stocke les statistiques des scans (date du scan, nombre de scans réalisés, temps moyen des scan, hôte le plus vulnérable)
+
+host_info.json : stocke les informations de la machines hote (nom, IP, OS, Version de l'application)
