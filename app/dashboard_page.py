@@ -58,8 +58,7 @@ def save_system_info_to_json():
         # Sauvegarde des informations dans un fichier JSON
         with open("./resultats/host_info.json", "w") as json_file:
             json.dump(system_info, json_file, indent=4)
-
-        print("Les informations système ont été sauvegardées dans 'host_info.json'.")
+            
     except Exception as e:
         print(f"Erreur lors de la sauvegarde des informations: {str(e)}")
 
