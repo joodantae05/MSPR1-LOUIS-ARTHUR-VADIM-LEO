@@ -1,5 +1,5 @@
 {
-    "scan_time": "2025-02-28 10:10:26",
+    "scan_time": "2025-02-28 10:34:01",
     "subnet": "172.20.30.0/24",
     "connected_machines": 21,
     "machines": [
@@ -70,21 +70,6 @@
             }
         },
         {
-            "ip": "172.20.30.23",
-            "open_ports": [
-                7070
-            ],
-            "service_info": {
-                "7070": {
-                    "service": "realserver",
-                    "version": ""
-                }
-            },
-            "vulnerabilities": {
-                "7070": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
-            }
-        },
-        {
             "ip": "172.20.30.40",
             "open_ports": [
                 22,
@@ -128,6 +113,21 @@
         },
         {
             "ip": "172.20.30.21",
+            "open_ports": [
+                7070
+            ],
+            "service_info": {
+                "7070": {
+                    "service": "realserver",
+                    "version": ""
+                }
+            },
+            "vulnerabilities": {
+                "7070": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
+        },
+        {
+            "ip": "172.20.30.23",
             "open_ports": [
                 7070
             ],
@@ -682,7 +682,7 @@
             }
         },
         {
-            "ip": "172.20.30.5",
+            "ip": "172.20.30.20",
             "open_ports": [
                 80,
                 443,
@@ -698,7 +698,7 @@
                 },
                 "443": {
                     "service": "https",
-                    "version": "8.0.3"
+                    "version": "8.0.0"
                 },
                 "902": {
                     "service": "vmware-auth",
@@ -727,7 +727,7 @@
             }
         },
         {
-            "ip": "172.20.30.20",
+            "ip": "172.20.30.5",
             "open_ports": [
                 80,
                 443,
@@ -743,7 +743,7 @@
                 },
                 "443": {
                     "service": "https",
-                    "version": ""
+                    "version": "8.0.3"
                 },
                 "902": {
                     "service": "vmware-auth",
