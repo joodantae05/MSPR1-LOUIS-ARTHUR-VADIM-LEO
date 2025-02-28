@@ -1,7 +1,7 @@
 # MSPR_TPRE511
  MSPR 1 python
 
-dashboard_page.py : Affichage du nombre d'hôtes connectés, leur ip, les ports ouverts, les services et les vulnérabilités associés, la date du dernier scan, les infos de la machine hotes (os, ip, nom)
+dashboard_page.py : Affichage du nombre d'hôtes connectés, leur ip, les ports ouverts, les services et les vulnérabilités associés, la date du dernier scan, les infos de la machine hotes (os, ip, nom) et versioning de l'application à partir des dernières mises à jours dans le dépôt.
 
 home_page.py : Page par défaut avec la navbar
 
