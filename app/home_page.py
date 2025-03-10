@@ -4,6 +4,7 @@ import ipaddress
 import tkinter as tk
 from tkinter import ttk
 import threading
+import requests
 import time
 import json
 import os
@@ -106,7 +107,7 @@ class HomePage:
 
     def finish_scan(self):
         self.progress_bar["value"] = 100
-        self.status_label.config(text="Scan terminé !\n Fichier JSON créé dans le dossier 'resultats'")
+        self.status_label.config(text="Scan terminé !\n Fichier JSON créé dans le dossier 'resultats' et envoyé à l'API")
         self.dashboard.show_results(self.machine_info)
         self.button.config(state="normal", bg="#3498DB", activebackground="#2980B9")
 
@@ -130,24 +131,24 @@ class HomePage:
 
         # Créer un objet global pour les données
         merged_data = {
-            "scan_time": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "date_heure": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             "subnet": str(self.get_subnet(self.get_local_ip())),
-            "connected_machines": len(self.machine_info),
+            "nombre_machine": len(self.machine_info),
             "machines": [],
             "summary": {
-                "total_scans": self.total_scans,
+                "nombre_scan": self.total_scans,
                 "temps_moyen": self.avg_scan_time,
-                "most_vulnerable_host": self.most_vulnerable_host
+                "plus_vulnerable": self.most_vulnerable_host
             }
         }
 
         # Ajouter les informations sur les machines scannées
         for ip, open_ports, service_info, vulnerabilities in self.machine_info:
             machine_data = {
-                "ip": ip,
-                "open_ports": open_ports,
-                "service_info": service_info,
-                "vulnerabilities": vulnerabilities
+                "ip_adress": ip,
+                "port": open_ports,
+                "service": service_info,
+                "vulnerabilite": vulnerabilities
             }
             merged_data["machines"].append(machine_data)
 
@@ -171,7 +172,7 @@ class HomePage:
             data = json.load(f)
 
         # L'URL de l'API
-        url = 'http://172.20.30.16/scans/'
+        url = 'http://172.20.30.16:8000/scan'
 
         # Envoyer la requête POST avec les données JSON
         try:

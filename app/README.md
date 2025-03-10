@@ -11,10 +11,8 @@ scan.py : effectue un scan réseau à partir de la plage ip de l'adresse ip loca
 
 stats_page.py : nb de scan total, temps moyen de scan du réseau, l'hôte le plus vulnérable
 
-scan_results.json : stocke le résultat du dernier scan effectué
+data.json : stocke le résultat du dernier scan effectué, stocke les statistiques des scans (date du scan, nombre de scans réalisés, temps moyen des scan, hôte le plus vulnérable)
 
 scanned_ips.txt : stocke uniquement les adresses IP pour effectuer un ping
-
-stats.json : stocke les statistiques des scans (date du scan, nombre de scans réalisés, temps moyen des scan, hôte le plus vulnérable)
 
 host_info.json : stocke les informations de la machines hote (nom, IP, OS, Version de l'application)
