@@ -3,7 +3,7 @@
 
 dashboard_page.py : Affichage du nombre d'hôtes connectés, leur ip, les ports ouverts, les services et les vulnérabilités associés, la date du dernier scan, les infos de la machine hotes (os, ip, nom) et versioning de l'application à partir des dernières mises à jours dans le dépôt.
 
-home_page.py : Page par défaut avec la navbar
+home_page.py : Page par défaut avec la navbar, joins l'API et envoie des données grâce à data.json après chaque scan. 
 
 main.py : page principale avec l'affichage de la page avec le bouton de scan et la barre de progression
 
