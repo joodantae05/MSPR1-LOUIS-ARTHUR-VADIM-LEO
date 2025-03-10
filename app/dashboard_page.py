@@ -19,7 +19,7 @@ def get_local_ip():
         s.close()
     return ip
 
-# Fonction pour obtenir les informations du système
+# Fonction pour obtenir les informations du systeme
 def get_system_info():
     try:
         vm_name = platform.node()
@@ -44,14 +44,14 @@ def get_last_commit_version():
     except subprocess.CalledProcessError as e:
         return "Erreur lors de la recuperation du commit"
 
-# Fonction pour sauvegarder les informations système dans un fichier JSON
+# Fonction pour sauvegarder les informations systeme dans un fichier JSON
 def save_system_info_to_json():
     try:
         system_info = get_system_info()
         local_ip = get_local_ip()
         app_version = get_last_commit_version()
 
-        # Ajouter l'IP locale et la version de l'application aux informations système
+        # Ajouter l'IP locale et la version de l'application aux informations systeme
         system_info["Adresse IP locale"] = local_ip
         system_info["Version de l'application"] = app_version
 
@@ -94,10 +94,10 @@ class DashboardPage:
         self.right_title_frame = tk.Frame(self.right_frame, bg="#2C3E50")
         self.right_title_frame.pack(fill="x", pady=10)
 
-        self.info_label = tk.Label(self.right_title_frame, text="Informations Système", fg="white", bg="#2C3E50", font=("Arial", 18, "bold"))
+        self.info_label = tk.Label(self.right_title_frame, text="Informations Systeme", fg="white", bg="#2C3E50", font=("Arial", 18, "bold"))
         self.info_label.pack(anchor="center", padx=10, pady=20)
 
-        self.refresh_button = tk.Button(self.right_frame, text="Reset Infos Système", command=self.refresh_system_info,
+        self.refresh_button = tk.Button(self.right_frame, text="Reset Infos Systeme", command=self.refresh_system_info,
                                 relief="flat", bd=0, font=("Segoe UI", 16), fg="white", bg="#4A90E2",
                                 activebackground="#357ABD", activeforeground="white", width=20, height=1,
                                 highlightthickness=0, pady=8, padx=8, borderwidth=2, anchor="center")
@@ -134,9 +134,9 @@ class DashboardPage:
         self.right_title_frame.pack(fill="x", pady=10)
         self.refresh_button.pack(pady=20)
     
-        # Affichage des informations système
+        # Affichage des informations systeme
         for key, value in self.system_info.items():
-            if key not in ["Système d'exploitation", "Version du système d'exploitation"]:  # Exclure ces deux cles
+            if key not in ["Systeme d'exploitation", "Version du systeme d'exploitation"]:  # Exclure ces deux cles
                 label = tk.Label(self.right_frame, text=f"{key}: {value}", fg="white", bg="#2C3E50", font=("Arial", 12))
                 label.pack(anchor="w", pady=5, padx=20)
     
@@ -144,8 +144,8 @@ class DashboardPage:
         ip_label.pack(anchor="w", pady=5, padx=20)
     
         # Affichage de l'OS et de la version
-        os_name = self.system_info.get("Système d'exploitation", "Inconnu")
-        os_version = self.system_info.get("Version du système d'exploitation", "Inconnue")
+        os_name = self.system_info.get("Systeme d'exploitation", "Inconnu")
+        os_version = self.system_info.get("Version du systeme d'exploitation", "Inconnue")
         os_label = tk.Label(self.right_frame, text=f"OS: {os_name} {os_version}", fg="white", bg="#2C3E50", font=("Arial", 12))
         os_label.pack(anchor="w", pady=5, padx=20)
         
