@@ -26,7 +26,7 @@ class HomePage:
         self.frame = tk.Frame(root, bg="#2C3E50", bd=0)
         self.frame.pack(fill='both', expand=True, padx=30, pady=30)
 
-        self.button = tk.Button(self.frame, text="Démarrer le Scan", command=self.on_click,
+        self.button = tk.Button(self.frame, text="Demarrer le Scan", command=self.on_click,
                                 relief="flat", bd=0, font=("Segoe UI", 16), fg="white", bg="#3498DB",
                                 activebackground="#2980B9", activeforeground="white", width=15, height=1)
         self.button.pack(pady=20)
@@ -67,7 +67,7 @@ class HomePage:
         online_hosts = list(online_hosts_gen)
 
         if total_ips == 0 or len(online_hosts) == 0:
-            self.status_label.config(text="Aucun hôte en ligne détecté.")
+            self.status_label.config(text="Aucun hôte en ligne detecte.")
             return
 
         machine_info = []
@@ -91,7 +91,7 @@ class HomePage:
                 ip, open_ports, service_info, vulnerabilities = future.result()
                 machine_info.append((ip, open_ports, service_info, vulnerabilities))
 
-                # Calcul du temps pour chaque hôte scanné
+                # Calcul du temps pour chaque hôte scanne
                 elapsed_time_per_host = time.time() - start_time - sum(self.times_per_host)
                 self.times_per_host.append(elapsed_time_per_host)
 
@@ -102,12 +102,12 @@ class HomePage:
 
     def update_progress(self, progress_percentage, elapsed_time):
         self.progress_bar["value"] = progress_percentage
-        progress_text = f"Scan en cours... Durée écoulée : {elapsed_time}"
+        progress_text = f"Scan en cours... Duree ecoulee : {elapsed_time}"
         self.status_label.config(text=progress_text)
 
     def finish_scan(self):
         self.progress_bar["value"] = 100
-        self.status_label.config(text="Scan terminé !\n Fichier JSON créé dans le dossier 'resultats' et envoyé à l'API")
+        self.status_label.config(text="Scan termine !\n Fichier JSON cree dans le dossier 'resultats' et envoye à l'API")
         self.dashboard.show_results(self.machine_info)
         self.button.config(state="normal", bg="#3498DB", activebackground="#2980B9")
 
@@ -124,67 +124,74 @@ class HomePage:
         # Mettre à jour les statistiques sur la page Stats
         self.stats_page.update_stats(self.total_scans, self.avg_scan_time, self.most_vulnerable_host)
 
-        # Enregistrement des résultats dans un fichier JSON fusionné
+        # Enregistrement des resultats dans un fichier JSON fusionne
         results_folder = "resultats"
         if not os.path.exists(results_folder):
             os.makedirs(results_folder)
 
-        # Créer un objet global pour les données
+        # Creer un objet global pour les donnees
         merged_data = {
-            "date_heure": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            "subnet": str(self.get_subnet(self.get_local_ip())),
-            "nombre_machine": len(self.machine_info),
-            "machines": [],
-            "summary": {
+            "reseau": {
+                "id_reseau": 0,  # ID du reseau, à personnaliser
+                "subnet": str(self.get_subnet(self.get_local_ip())),
+                "nombre_machine": len(self.machine_info),
+                "date_heure": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                "id_client": 0  # ID du client, à personnaliser
+            },
+            "scan": {
+                "id_statistique": 0,  # ID de la statistique, à personnaliser
                 "nombre_scan": self.total_scans,
                 "temps_moyen": self.avg_scan_time,
-                "plus_vulnerable": self.most_vulnerable_host
-            }
+                "plus_vulnerable": self.most_vulnerable_host,
+                "id_reseau": 0  # ID du reseau, à personnaliser
+            },
+            "machine": []
         }
 
-        # Ajouter les informations sur les machines scannées
+        # Ajouter les informations sur les machines scannees
         for ip, open_ports, service_info, vulnerabilities in self.machine_info:
             machine_data = {
                 "ip_adress": ip,
-                "port": open_ports,
-                "service": service_info,
-                "vulnerabilite": vulnerabilities
+                "port": ', '.join(map(str, open_ports)),  # Convertir la liste de ports en une chaîne
+                "service": json.dumps(service_info),  # Convertir le dictionnaire en chaîne JSON
+                "vulnerabilite": json.dumps(vulnerabilities),  # Convertir le dictionnaire en chaîne JSON
+                "id_reseau": 0  # ID du reseau, à personnaliser
             }
-            merged_data["machines"].append(machine_data)
+            merged_data["machine"].append(machine_data)
 
-        # Enregistrer le fichier JSON fusionné
+        # Enregistrer le fichier JSON fusionne
         json_file_path = os.path.join(results_folder, "data.json")
-        with open(json_file_path, 'w') as json_file:
+        with open(json_file_path, 'w', encoding='utf-8') as json_file:
             json.dump(merged_data, json_file, indent=4)
 
-        # Créer un fichier scanned_ips.txt pour les adresses IP scannées
+        # Creer un fichier scanned_ips.txt pour les adresses IP scannees
         ip_addresses = [ip for ip, _, _, _ in self.machine_info]
         txt_file_path = os.path.join(results_folder, "scanned_ips.txt")
         with open(txt_file_path, 'w') as txt_file:
             for ip in ip_addresses:
                 txt_file.write(ip + "\n")
-                
+
         self.send_to_api(json_file_path)
 
     def send_to_api(self, json_file_path):
-        # Charger les données depuis le fichier JSON
+        # Charger les donnees depuis le fichier JSON
         with open(json_file_path, 'r') as f:
             data = json.load(f)
 
         # L'URL de l'API
         url = 'http://172.20.30.16:8000/scan'
 
-        # Envoyer la requête POST avec les données JSON
+        # Envoyer la requête POST avec les donnees JSON
         try:
             response = requests.post(url, json=data)
 
-            # Vérifier la réponse de l'API
+            # Verifier la reponse de l'API
             if response.status_code == 200:
-                print("Données envoyées avec succès !")
+                print("Donnees envoyees avec succès !")
             else:
-                print(f"Erreur lors de l'envoi des données: {response.status_code}")
+                print(f"Erreur lors de l'envoi des donnees: {response.status_code}")
         except requests.exceptions.RequestException as e:
-            print(f"Erreur lors de l'envoi des données à l'API: {e}")
+            print(f"Erreur lors de l'envoi des donnees à l'API: {e}")
 
     def update_dashboard(self, machine_info):
         self.machine_info = machine_info

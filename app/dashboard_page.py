@@ -35,14 +35,14 @@ def get_system_info():
     except Exception as e:
         return {"Erreur": str(e)}
 
-# Fonction pour récupérer la version de l'application basée sur le dernier commit Git
+# Fonction pour recuperer la version de l'application basee sur le dernier commit Git
 def get_last_commit_version():
     try:
-        # Exécuter la commande git pour récupérer le dernier message de commit
+        # Executer la commande git pour recuperer le dernier message de commit
         commit_message = subprocess.check_output(["git", "log", "-1", "--pretty=%B"]).decode("utf-8").strip()
         return commit_message
     except subprocess.CalledProcessError as e:
-        return "Erreur lors de la récupération du commit"
+        return "Erreur lors de la recuperation du commit"
 
 # Fonction pour sauvegarder les informations système dans un fichier JSON
 def save_system_info_to_json():
@@ -58,11 +58,11 @@ def save_system_info_to_json():
         # Sauvegarde des informations dans un fichier JSON
         with open("./resultats/host_info.json", "w") as json_file:
             json.dump(system_info, json_file, indent=4)
-            
+
     except Exception as e:
         print(f"Erreur lors de la sauvegarde des informations: {str(e)}")
 
-# Création de l'interface graphique avec Tkinter
+# Creation de l'interface graphique avec Tkinter
 class DashboardPage:
     def __init__(self, root, app):
         self.root = root
@@ -81,11 +81,11 @@ class DashboardPage:
         self.left_title_frame = tk.Frame(self.left_frame, bg="#2C3E50")
         self.left_title_frame.pack(fill="x", pady=10)
 
-        self.result_label = tk.Label(self.left_title_frame, text="Résultats du dernier scan", fg="white", bg="#2C3E50", font=("Arial", 18, "bold"))
+        self.result_label = tk.Label(self.left_title_frame, text="Resultats du dernier scan", fg="white", bg="#2C3E50", font=("Arial", 18, "bold"))
         self.result_label.pack(anchor="center", padx=10, pady=20)
 
         # Ajout des labels pour le nombre de machines et la date du dernier scan
-        self.total_machines_label = tk.Label(self.left_frame, text="Nombre total de machines connectées: 0", fg="white", bg="#2C3E50", font=("Arial", 12))
+        self.total_machines_label = tk.Label(self.left_frame, text="Nombre total de machines connectees: 0", fg="white", bg="#2C3E50", font=("Arial", 12))
         self.total_machines_label.pack(anchor="w", padx=20)
 
         self.last_scan_date_label = tk.Label(self.left_frame, text="Date du dernier scan: Aucun", fg="white", bg="#2C3E50", font=("Arial", 12))
@@ -136,7 +136,7 @@ class DashboardPage:
     
         # Affichage des informations système
         for key, value in self.system_info.items():
-            if key not in ["Système d'exploitation", "Version du système d'exploitation"]:  # Exclure ces deux clés
+            if key not in ["Système d'exploitation", "Version du système d'exploitation"]:  # Exclure ces deux cles
                 label = tk.Label(self.right_frame, text=f"{key}: {value}", fg="white", bg="#2C3E50", font=("Arial", 12))
                 label.pack(anchor="w", pady=5, padx=20)
     
@@ -163,14 +163,14 @@ class DashboardPage:
         self.display_system_info()
 
     def show_results(self, machine_info):
-        result_text = f"Scan effectué à {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+        result_text = f"Scan effectue à {time.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
 
         # Calcul du nombre de machines et de la date du dernier scan
         total_machines = len(machine_info)
         last_scan_date = time.strftime('%Y-%m-%d %H:%M:%S')
 
         # Mise à jour des labels avec les informations du scan
-        self.total_machines_label.config(text=f"Nombre total de machines connectées: {total_machines}")
+        self.total_machines_label.config(text=f"Nombre total de machines connectees: {total_machines}")
         self.last_scan_date_label.config(text=f"Date du dernier scan: {last_scan_date}")
 
         for machine in machine_info:
@@ -187,10 +187,10 @@ class DashboardPage:
             ports_label = tk.Label(self.results_frame, text=f"Ports ouverts: {self.format_ports(open_ports)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
             ports_label.pack(anchor="w", padx=20, pady=5)
 
-            services_label = tk.Label(self.results_frame, text=f"Services détectés: {self.format_services(service_info)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
+            services_label = tk.Label(self.results_frame, text=f"Services detectes: {self.format_services(service_info)}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
             services_label.pack(anchor="w", padx=20, pady=5)
 
-            vuln_label = tk.Label(self.results_frame, text=f"Vulnérabilités: {vulnerabilities_str}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
+            vuln_label = tk.Label(self.results_frame, text=f"Vulnerabilites: {vulnerabilities_str}", fg="white", bg="#1E1E2D", font=("Arial", 10), wraplength=350)
             vuln_label.pack(anchor="w", padx=20, pady=5)
 
         self.results_frame.update_idletasks()
@@ -199,11 +199,11 @@ class DashboardPage:
     def format_vulnerabilities(self, vulnerabilities):
         if isinstance(vulnerabilities, dict):
             vuln_list = [f"{key}: {vuln}" for key, vuln in vulnerabilities.items()]
-            return '\n'.join(vuln_list) if vuln_list else "Aucune vulnérabilité détectée"
+            return '\n'.join(vuln_list) if vuln_list else "Aucune vulnerabilite detectee"
         elif isinstance(vulnerabilities, list):
-            return ', '.join(vulnerabilities) if vulnerabilities else "Aucune vulnérabilité détectée"
+            return ', '.join(vulnerabilities) if vulnerabilities else "Aucune vulnerabilite detectee"
         else:
-            return "Aucune vulnérabilité détectée"
+            return "Aucune vulnerabilite detectee"
 
     def format_ip(self, ip):
         return f"{ip}"
@@ -213,4 +213,4 @@ class DashboardPage:
 
     def format_services(self, services):
         return '\n'.join([f"Service: {service['service']} (Version: {service['version']})" 
-                          for service in services.values()]) if services else "Aucun service détecté"
+                          for service in services.values()]) if services else "Aucun service detecte"

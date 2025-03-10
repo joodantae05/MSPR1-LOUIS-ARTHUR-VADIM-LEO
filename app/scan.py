@@ -7,19 +7,19 @@ import time
 
 def ping(host):
     """
-    Effectue un ping pour tester si l'hôte est en ligne avec un délai réduit.
+    Effectue un ping pour tester si l'hôte est en ligne avec un delai reduit.
     """
     system_platform = platform.system().lower()
 
-    # Utiliser des arguments optimisés pour le ping en fonction du système
+    # Utiliser des arguments optimises pour le ping en fonction du système
     cmd = []
     if system_platform == "windows":
-        cmd = ['ping', '-n', '1', '-w', '30', host]  # Réduit à 30ms pour windows
+        cmd = ['ping', '-n', '1', '-w', '30', host]  # Reduit à 30ms pour windows
     else:
-        cmd = ['ping', '-c', '1', '-W', '1', host]  # Timeout réduit à 1 seconde pour Linux/MacOS
+        cmd = ['ping', '-c', '1', '-W', '1', host]  # Timeout reduit à 1 seconde pour Linux/MacOS
 
     try:
-        # Timeout réduit à 0.3 seconde pour accélérer le ping
+        # Timeout reduit à 0.3 seconde pour accelerer le ping
         result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=0.3)
         return host
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
@@ -29,11 +29,11 @@ def ping(host):
 def scan_ports(host):
     """
     Scanne les ports de l'hôte en utilisant Nmap pour les ports les plus courants.
-    Utilisation de l'option '-sV' pour obtenir des informations détaillées sur les services.
+    Utilisation de l'option '-sV' pour obtenir des informations detaillees sur les services.
     """
     nm = nmap.PortScanner()
     try:
-        nm.scan(hosts=host, arguments=' -sV -T4')  # Utilisation de T4 pour la rapidité
+        nm.scan(hosts=host, arguments=' -sV -T4')  # Utilisation de T4 pour la rapidite
 
         open_ports = []
         service_info = {}
@@ -47,8 +47,8 @@ def scan_ports(host):
                     open_ports.append(port)
                     service_info[port] = {'service': service, 'version': version}
 
-                    # Recherche des vulnérabilités associées au port
-                    vuln_info = nm[host]['tcp'][port].get('script', 'Aucune vulnérabilité détectée')
+                    # Recherche des vulnerabilites associees au port
+                    vuln_info = nm[host]['tcp'][port].get('script', 'Aucune vulnerabilite detectee')
                     vulnerabilities[port] = vuln_info
 
         return host, open_ports, service_info, vulnerabilities
@@ -63,14 +63,14 @@ def scan_ports(host):
 
 def scan_network(network_ip):
     """
-    Scanne le réseau pour trouver les hôtes en ligne en utilisant des threads pour accélérer le processus.
+    Scanne le reseau pour trouver les hôtes en ligne en utilisant des threads pour accelerer le processus.
     """
     network = ipaddress.ip_network(network_ip, strict=False)
     online_hosts = []
     total_ips = sum(1 for _ in network.hosts())  # Total d'IP à scanner
 
     # Dynamiser le nombre de threads en fonction du nombre d'hôtes à scanner
-    max_workers = min(50, total_ips // 10)  # Limiter les threads à 50 pour éviter une surcharge
+    max_workers = min(50, total_ips // 10)  # Limiter les threads à 50 pour eviter une surcharge
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = {executor.submit(ping, str(ip)): ip for ip in network.hosts()}
@@ -84,7 +84,7 @@ def scan_network(network_ip):
 
 def display_machine_info(ip, open_ports, service_info, vulnerabilities):
     """
-    Affiche les informations détaillées sur chaque machine, optimisé pour un affichage rapide.
+    Affiche les informations detaillees sur chaque machine, optimise pour un affichage rapide.
     """
     print(f"\n--- Informations pour la machine {ip} ---")
     if open_ports:
@@ -93,7 +93,7 @@ def display_machine_info(ip, open_ports, service_info, vulnerabilities):
             service = service_info.get(port, {}).get('service', 'Inconnu')
             version = service_info.get(port, {}).get('version', 'Inconnue')
             print(f"  Port {port}: {service} {version}")
-            print(f"  Vulnérabilités: {vulnerabilities.get(port, 'Aucune vulnérabilité détectée')}")
+            print(f"  Vulnerabilites: {vulnerabilities.get(port, 'Aucune vulnerabilite detectee')}")
     else:
         print("Aucun port ouvert")
     print("--------------------------")
