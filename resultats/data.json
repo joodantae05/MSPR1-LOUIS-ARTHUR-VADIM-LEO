@@ -1,13 +1,28 @@
 {
-    "scan_time": "2025-02-28 10:34:01",
+    "scan_time": "2025-03-10 18:41:14",
     "subnet": "172.20.30.0/24",
-    "connected_machines": 21,
+    "connected_machines": 22,
     "machines": [
         {
-            "ip": "172.20.30.16",
+            "ip": "172.20.30.17",
             "open_ports": [],
             "service_info": {},
             "vulnerabilities": {}
+        },
+        {
+            "ip": "172.20.30.16",
+            "open_ports": [
+                3306
+            ],
+            "service_info": {
+                "3306": {
+                    "service": "mysql",
+                    "version": "5.5.5-10.11.6"
+                }
+            },
+            "vulnerabilities": {
+                "3306": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
         },
         {
             "ip": "172.20.30.22",
@@ -70,48 +85,6 @@
             }
         },
         {
-            "ip": "172.20.30.40",
-            "open_ports": [
-                22,
-                111,
-                3128
-            ],
-            "service_info": {
-                "22": {
-                    "service": "ssh",
-                    "version": "9.2p1 Debian 2+deb12u2"
-                },
-                "111": {
-                    "service": "rpcbind",
-                    "version": "2-4"
-                },
-                "3128": {
-                    "service": "http",
-                    "version": "3.0"
-                }
-            },
-            "vulnerabilities": {
-                "22": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "111": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "3128": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
-            }
-        },
-        {
-            "ip": "172.20.30.24",
-            "open_ports": [
-                7070
-            ],
-            "service_info": {
-                "7070": {
-                    "service": "realserver",
-                    "version": ""
-                }
-            },
-            "vulnerabilities": {
-                "7070": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
-            }
-        },
-        {
             "ip": "172.20.30.21",
             "open_ports": [
                 7070
@@ -139,6 +112,105 @@
             },
             "vulnerabilities": {
                 "7070": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
+        },
+        {
+            "ip": "172.20.30.24",
+            "open_ports": [
+                7070
+            ],
+            "service_info": {
+                "7070": {
+                    "service": "realserver",
+                    "version": ""
+                }
+            },
+            "vulnerabilities": {
+                "7070": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
+        },
+        {
+            "ip": "172.20.30.40",
+            "open_ports": [
+                22,
+                111,
+                3128
+            ],
+            "service_info": {
+                "22": {
+                    "service": "ssh",
+                    "version": "9.2p1 Debian 2+deb12u2"
+                },
+                "111": {
+                    "service": "rpcbind",
+                    "version": "2-4"
+                },
+                "3128": {
+                    "service": "http",
+                    "version": "3.0"
+                }
+            },
+            "vulnerabilities": {
+                "22": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "111": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "3128": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
+            }
+        },
+        {
+            "ip": "172.20.30.108",
+            "open_ports": [
+                53,
+                135,
+                139,
+                445,
+                902,
+                912,
+                3389,
+                5357
+            ],
+            "service_info": {
+                "53": {
+                    "service": "domain",
+                    "version": ""
+                },
+                "135": {
+                    "service": "msrpc",
+                    "version": ""
+                },
+                "139": {
+                    "service": "netbios-ssn",
+                    "version": ""
+                },
+                "445": {
+                    "service": "microsoft-ds",
+                    "version": ""
+                },
+                "902": {
+                    "service": "vmware-auth",
+                    "version": "1.10"
+                },
+                "912": {
+                    "service": "vmware-auth",
+                    "version": "1.0"
+                },
+                "3389": {
+                    "service": "ms-wbt-server",
+                    "version": ""
+                },
+                "5357": {
+                    "service": "http",
+                    "version": "2.0"
+                }
+            },
+            "vulnerabilities": {
+                "53": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "135": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "139": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "445": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "902": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "912": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "3389": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
+                "5357": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         },
         {
@@ -229,63 +301,6 @@
                 "902": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "912": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
                 "3389": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
-            }
-        },
-        {
-            "ip": "172.20.30.108",
-            "open_ports": [
-                53,
-                135,
-                139,
-                445,
-                902,
-                912,
-                3389,
-                5357
-            ],
-            "service_info": {
-                "53": {
-                    "service": "domain",
-                    "version": ""
-                },
-                "135": {
-                    "service": "msrpc",
-                    "version": ""
-                },
-                "139": {
-                    "service": "netbios-ssn",
-                    "version": ""
-                },
-                "445": {
-                    "service": "microsoft-ds",
-                    "version": ""
-                },
-                "902": {
-                    "service": "vmware-auth",
-                    "version": "1.10"
-                },
-                "912": {
-                    "service": "vmware-auth",
-                    "version": "1.0"
-                },
-                "3389": {
-                    "service": "ms-wbt-server",
-                    "version": ""
-                },
-                "5357": {
-                    "service": "http",
-                    "version": "2.0"
-                }
-            },
-            "vulnerabilities": {
-                "53": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "135": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "139": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "445": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "902": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "912": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "3389": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e",
-                "5357": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         },
         {
@@ -637,7 +652,7 @@
             }
         },
         {
-            "ip": "172.20.30.10",
+            "ip": "172.20.30.20",
             "open_ports": [
                 80,
                 443,
@@ -652,7 +667,7 @@
                     "version": ""
                 },
                 "443": {
-                    "service": "http",
+                    "service": "https",
                     "version": ""
                 },
                 "902": {
@@ -682,7 +697,7 @@
             }
         },
         {
-            "ip": "172.20.30.20",
+            "ip": "172.20.30.10",
             "open_ports": [
                 80,
                 443,
@@ -697,8 +712,8 @@
                     "version": ""
                 },
                 "443": {
-                    "service": "https",
-                    "version": "8.0.0"
+                    "service": "http",
+                    "version": ""
                 },
                 "902": {
                     "service": "vmware-auth",
@@ -816,5 +831,10 @@
                 "9080": "Aucune vuln\u00e9rabilit\u00e9 d\u00e9tect\u00e9e"
             }
         }
-    ]
+    ],
+    "summary": {
+        "total_scans": 1,
+        "temps_moyen": 7.09,
+        "most_vulnerable_host": "172.20.30.17"
+    }
 }

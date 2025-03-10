@@ -106,36 +106,42 @@ class HomePage:
 
     def finish_scan(self):
         self.progress_bar["value"] = 100
-        self.status_label.config(text="Scan terminé !\n Fichiers JSON et TXT créés dans le dossier 'resultats'")
+        self.status_label.config(text="Scan terminé !\n Fichier JSON créé dans le dossier 'resultats'")
         self.dashboard.show_results(self.machine_info)
         self.button.config(state="normal", bg="#3498DB", activebackground="#2980B9")
-
+    
         self.total_scans += 1
-
+    
         # Calcul du temps moyen de scan
         if self.times_per_host:
             self.avg_scan_time = round(sum(self.times_per_host) / len(self.times_per_host), 2)
         else:
             self.avg_scan_time = 0
-
+    
         self.most_vulnerable_host = self.calculate_most_vulnerable_host()
-
+    
         # Mettre à jour les statistiques sur la page Stats
         self.stats_page.update_stats(self.total_scans, self.avg_scan_time, self.most_vulnerable_host)
-
-        # Enregistrement des résultats dans des fichiers JSON et TXT
+    
+        # Enregistrement des résultats dans un fichier JSON fusionné
         results_folder = "resultats"
         if not os.path.exists(results_folder):
             os.makedirs(results_folder)
-
-        # Créer le fichier scan_results.json pour les détails des scans
-        scan_data = {
+    
+        # Créer un objet global pour les données
+        merged_data = {
             "scan_time": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             "subnet": str(self.get_subnet(self.get_local_ip())),
             "connected_machines": len(self.machine_info),
-            "machines": []
+            "machines": [],
+            "summary": {
+                "total_scans": self.total_scans,
+                "temps_moyen": self.avg_scan_time,
+                "most_vulnerable_host": self.most_vulnerable_host
+            }
         }
-
+    
+        # Ajouter les informations sur les machines scannées
         for ip, open_ports, service_info, vulnerabilities in self.machine_info:
             machine_data = {
                 "ip": ip,
@@ -143,42 +149,13 @@ class HomePage:
                 "service_info": service_info,
                 "vulnerabilities": vulnerabilities
             }
-            scan_data["machines"].append(machine_data)
-
-        json_file_path = os.path.join(results_folder, "scan_results.json")
+            merged_data["machines"].append(machine_data)
+    
+        # Enregistrer le fichier JSON fusionné
+        json_file_path = os.path.join(results_folder, "data.json")
         with open(json_file_path, 'w') as json_file:
-            json.dump(scan_data, json_file, indent=4)
-
-        # Créer ou mettre à jour le fichier stats.json avec les résumés du scan
-        summary_data = {
-            "scan_time": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            "total_scans": self.total_scans,
-            "temps_moyen": self.avg_scan_time,
-            "most_vulnerable_host": self.most_vulnerable_host
-        }
-
-        stats_file_path = os.path.join(results_folder, "stats.json")
-
-        # Vérifier si le fichier stats.json existe déjà
-        if os.path.exists(stats_file_path):
-            # Si le fichier existe, on le lit et ajoute les nouvelles données
-            with open(stats_file_path, 'r') as stats_file:
-                try:
-                    existing_data = json.load(stats_file)
-                except json.JSONDecodeError:
-                    existing_data = []
-
-            # Ajouter les nouvelles données à la liste existante
-            existing_data.append(summary_data)
-
-            # Écrire les nouvelles données dans le fichier stats.json
-            with open(stats_file_path, 'w') as stats_file:
-                json.dump(existing_data, stats_file, indent=4)
-        else:
-            # Si le fichier n'existe pas, on crée un nouveau fichier avec les données
-            with open(stats_file_path, 'w') as stats_file:
-                json.dump([summary_data], stats_file, indent=4)
-
+            json.dump(merged_data, json_file, indent=4)
+    
         # Créer un fichier scanned_ips.txt pour les adresses IP scannées
         ip_addresses = [ip for ip, _, _, _ in self.machine_info]
         txt_file_path = os.path.join(results_folder, "scanned_ips.txt")
