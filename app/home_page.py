@@ -109,25 +109,25 @@ class HomePage:
         self.status_label.config(text="Scan terminé !\n Fichier JSON créé dans le dossier 'resultats'")
         self.dashboard.show_results(self.machine_info)
         self.button.config(state="normal", bg="#3498DB", activebackground="#2980B9")
-    
+
         self.total_scans += 1
-    
+
         # Calcul du temps moyen de scan
         if self.times_per_host:
             self.avg_scan_time = round(sum(self.times_per_host) / len(self.times_per_host), 2)
         else:
             self.avg_scan_time = 0
-    
+
         self.most_vulnerable_host = self.calculate_most_vulnerable_host()
-    
+
         # Mettre à jour les statistiques sur la page Stats
         self.stats_page.update_stats(self.total_scans, self.avg_scan_time, self.most_vulnerable_host)
-    
+
         # Enregistrement des résultats dans un fichier JSON fusionné
         results_folder = "resultats"
         if not os.path.exists(results_folder):
             os.makedirs(results_folder)
-    
+
         # Créer un objet global pour les données
         merged_data = {
             "scan_time": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -140,7 +140,7 @@ class HomePage:
                 "most_vulnerable_host": self.most_vulnerable_host
             }
         }
-    
+
         # Ajouter les informations sur les machines scannées
         for ip, open_ports, service_info, vulnerabilities in self.machine_info:
             machine_data = {
@@ -150,12 +150,12 @@ class HomePage:
                 "vulnerabilities": vulnerabilities
             }
             merged_data["machines"].append(machine_data)
-    
+
         # Enregistrer le fichier JSON fusionné
         json_file_path = os.path.join(results_folder, "data.json")
         with open(json_file_path, 'w') as json_file:
             json.dump(merged_data, json_file, indent=4)
-    
+
         # Créer un fichier scanned_ips.txt pour les adresses IP scannées
         ip_addresses = [ip for ip, _, _, _ in self.machine_info]
         txt_file_path = os.path.join(results_folder, "scanned_ips.txt")
@@ -163,6 +163,28 @@ class HomePage:
             for ip in ip_addresses:
                 txt_file.write(ip + "\n")
                 
+        self.send_to_api(json_file_path)
+
+    def send_to_api(self, json_file_path):
+        # Charger les données depuis le fichier JSON
+        with open(json_file_path, 'r') as f:
+            data = json.load(f)
+
+        # L'URL de l'API
+        url = 'http://172.20.30.16/scans/'
+
+        # Envoyer la requête POST avec les données JSON
+        try:
+            response = requests.post(url, json=data)
+
+            # Vérifier la réponse de l'API
+            if response.status_code == 200:
+                print("Données envoyées avec succès !")
+            else:
+                print(f"Erreur lors de l'envoi des données: {response.status_code}")
+        except requests.exceptions.RequestException as e:
+            print(f"Erreur lors de l'envoi des données à l'API: {e}")
+
     def update_dashboard(self, machine_info):
         self.machine_info = machine_info
 
