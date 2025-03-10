@@ -28,8 +28,8 @@ def get_system_info():
 
         system_info = {
             "Nom de la machine": vm_name,
-            "Système d'exploitation": os_name,
-            "Version du système d'exploitation": os_version,
+            "Systeme d'exploitation": os_name,
+            "Version du systeme d'exploitation": os_version,
         }
         return system_info
     except Exception as e:
