@@ -153,6 +153,9 @@ class DashboardPage:
         app_version = get_last_commit_version()
         version_label = tk.Label(self.right_frame, text=f"Version de l'application: {app_version}", fg="white", bg="#2C3E50", font=("Arial", 12))
         version_label.pack(anchor="w", pady=5, padx=20)
+        
+        id_label = tk.Label(self.right_frame, text=f"id du client : 1", fg="white", bg="#2C3E50", font=("Arial", 12))
+        id_label.pack(anchor="w", pady=5, padx=20)
 
         # Sauvegarder les informations dans un fichier JSON
         save_system_info_to_json()
