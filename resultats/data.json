@@ -1,0 +1,109 @@
+{
+    "reseau": {
+        "id_reseau": 0,
+        "subnet": "172.20.30.0/24",
+        "nombre_machine": 13,
+        "date_heure": "2025-03-18 14:26:46",
+        "id_client": 0
+    },
+    "scan": {
+        "id_statistique": 0,
+        "nombre_scan": 1,
+        "temps_moyen": 11.98,
+        "plus_vulnerable": "172.20.30.22",
+        "id_reseau": 0
+    },
+    "machine": [
+        {
+            "ip_adress": "172.20.30.22",
+            "port": "",
+            "service": "{}",
+            "vulnerabilite": "{}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.11",
+            "port": "135, 139, 445",
+            "service": "{\"135\": {\"service\": \"msrpc\", \"version\": \"\"}, \"139\": {\"service\": \"netbios-ssn\", \"version\": \"\"}, \"445\": {\"service\": \"microsoft-ds\", \"version\": \"\"}}",
+            "vulnerabilite": "{\"135\": \"Aucune vulnerabilite detectee\", \"139\": \"Aucune vulnerabilite detectee\", \"445\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.107",
+            "port": "135, 139, 445, 902, 912",
+            "service": "{\"135\": {\"service\": \"msrpc\", \"version\": \"\"}, \"139\": {\"service\": \"netbios-ssn\", \"version\": \"\"}, \"445\": {\"service\": \"microsoft-ds\", \"version\": \"\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"912\": {\"service\": \"vmware-auth\", \"version\": \"1.0\"}}",
+            "vulnerabilite": "{\"135\": \"Aucune vulnerabilite detectee\", \"139\": \"Aucune vulnerabilite detectee\", \"445\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"912\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.200",
+            "port": "53, 135, 139, 445, 902, 912, 3389",
+            "service": "{\"53\": {\"service\": \"domain\", \"version\": \"\"}, \"135\": {\"service\": \"msrpc\", \"version\": \"\"}, \"139\": {\"service\": \"netbios-ssn\", \"version\": \"\"}, \"445\": {\"service\": \"microsoft-ds\", \"version\": \"\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"912\": {\"service\": \"vmware-auth\", \"version\": \"1.0\"}, \"3389\": {\"service\": \"ms-wbt-server\", \"version\": \"\"}}",
+            "vulnerabilite": "{\"53\": \"Aucune vulnerabilite detectee\", \"135\": \"Aucune vulnerabilite detectee\", \"139\": \"Aucune vulnerabilite detectee\", \"445\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"912\": \"Aucune vulnerabilite detectee\", \"3389\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.23",
+            "port": "7070",
+            "service": "{\"7070\": {\"service\": \"realserver\", \"version\": \"\"}}",
+            "vulnerabilite": "{\"7070\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.109",
+            "port": "53, 135, 139, 445, 902, 912, 3389, 5357",
+            "service": "{\"53\": {\"service\": \"domain\", \"version\": \"\"}, \"135\": {\"service\": \"msrpc\", \"version\": \"\"}, \"139\": {\"service\": \"netbios-ssn\", \"version\": \"\"}, \"445\": {\"service\": \"microsoft-ds\", \"version\": \"\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"912\": {\"service\": \"vmware-auth\", \"version\": \"1.0\"}, \"3389\": {\"service\": \"ms-wbt-server\", \"version\": \"\"}, \"5357\": {\"service\": \"http\", \"version\": \"2.0\"}}",
+            "vulnerabilite": "{\"53\": \"Aucune vulnerabilite detectee\", \"135\": \"Aucune vulnerabilite detectee\", \"139\": \"Aucune vulnerabilite detectee\", \"445\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"912\": \"Aucune vulnerabilite detectee\", \"3389\": \"Aucune vulnerabilite detectee\", \"5357\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.225",
+            "port": "53, 135, 139, 445, 902, 912, 3389, 5357",
+            "service": "{\"53\": {\"service\": \"domain\", \"version\": \"\"}, \"135\": {\"service\": \"msrpc\", \"version\": \"\"}, \"139\": {\"service\": \"netbios-ssn\", \"version\": \"\"}, \"445\": {\"service\": \"microsoft-ds\", \"version\": \"\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"912\": {\"service\": \"vmware-auth\", \"version\": \"1.0\"}, \"3389\": {\"service\": \"ms-wbt-server\", \"version\": \"\"}, \"5357\": {\"service\": \"http\", \"version\": \"2.0\"}}",
+            "vulnerabilite": "{\"53\": \"Aucune vulnerabilite detectee\", \"135\": \"Aucune vulnerabilite detectee\", \"139\": \"Aucune vulnerabilite detectee\", \"445\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"912\": \"Aucune vulnerabilite detectee\", \"3389\": \"Aucune vulnerabilite detectee\", \"5357\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.210",
+            "port": "53, 135, 139, 445, 902, 912, 3389, 5357, 7070",
+            "service": "{\"53\": {\"service\": \"domain\", \"version\": \"\"}, \"135\": {\"service\": \"msrpc\", \"version\": \"\"}, \"139\": {\"service\": \"netbios-ssn\", \"version\": \"\"}, \"445\": {\"service\": \"microsoft-ds\", \"version\": \"\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"912\": {\"service\": \"vmware-auth\", \"version\": \"1.0\"}, \"3389\": {\"service\": \"ms-wbt-server\", \"version\": \"\"}, \"5357\": {\"service\": \"http\", \"version\": \"2.0\"}, \"7070\": {\"service\": \"realserver\", \"version\": \"\"}}",
+            "vulnerabilite": "{\"53\": \"Aucune vulnerabilite detectee\", \"135\": \"Aucune vulnerabilite detectee\", \"139\": \"Aucune vulnerabilite detectee\", \"445\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"912\": \"Aucune vulnerabilite detectee\", \"3389\": \"Aucune vulnerabilite detectee\", \"5357\": \"Aucune vulnerabilite detectee\", \"7070\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.230",
+            "port": "53, 135, 139, 445, 902, 912, 7070",
+            "service": "{\"53\": {\"service\": \"domain\", \"version\": \"\"}, \"135\": {\"service\": \"msrpc\", \"version\": \"\"}, \"139\": {\"service\": \"netbios-ssn\", \"version\": \"\"}, \"445\": {\"service\": \"microsoft-ds\", \"version\": \"\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"912\": {\"service\": \"vmware-auth\", \"version\": \"1.0\"}, \"7070\": {\"service\": \"realserver\", \"version\": \"\"}}",
+            "vulnerabilite": "{\"53\": \"Aucune vulnerabilite detectee\", \"135\": \"Aucune vulnerabilite detectee\", \"139\": \"Aucune vulnerabilite detectee\", \"445\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"912\": \"Aucune vulnerabilite detectee\", \"7070\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.239",
+            "port": "53, 135, 139, 445, 902, 912, 3389, 5357, 7070",
+            "service": "{\"53\": {\"service\": \"domain\", \"version\": \"\"}, \"135\": {\"service\": \"msrpc\", \"version\": \"\"}, \"139\": {\"service\": \"netbios-ssn\", \"version\": \"\"}, \"445\": {\"service\": \"microsoft-ds\", \"version\": \"\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"912\": {\"service\": \"vmware-auth\", \"version\": \"1.0\"}, \"3389\": {\"service\": \"ms-wbt-server\", \"version\": \"\"}, \"5357\": {\"service\": \"http\", \"version\": \"2.0\"}, \"7070\": {\"service\": \"realserver\", \"version\": \"\"}}",
+            "vulnerabilite": "{\"53\": \"Aucune vulnerabilite detectee\", \"135\": \"Aucune vulnerabilite detectee\", \"139\": \"Aucune vulnerabilite detectee\", \"445\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"912\": \"Aucune vulnerabilite detectee\", \"3389\": \"Aucune vulnerabilite detectee\", \"5357\": \"Aucune vulnerabilite detectee\", \"7070\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.235",
+            "port": "53, 135, 139, 443, 445, 902, 912, 3389",
+            "service": "{\"53\": {\"service\": \"domain\", \"version\": \"\"}, \"135\": {\"service\": \"msrpc\", \"version\": \"\"}, \"139\": {\"service\": \"netbios-ssn\", \"version\": \"\"}, \"443\": {\"service\": \"http\", \"version\": \"\"}, \"445\": {\"service\": \"microsoft-ds\", \"version\": \"\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"912\": {\"service\": \"vmware-auth\", \"version\": \"1.0\"}, \"3389\": {\"service\": \"ms-wbt-server\", \"version\": \"\"}}",
+            "vulnerabilite": "{\"53\": \"Aucune vulnerabilite detectee\", \"135\": \"Aucune vulnerabilite detectee\", \"139\": \"Aucune vulnerabilite detectee\", \"443\": \"Aucune vulnerabilite detectee\", \"445\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"912\": \"Aucune vulnerabilite detectee\", \"3389\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.10",
+            "port": "80, 443, 902, 8000, 8300, 9080",
+            "service": "{\"80\": {\"service\": \"http\", \"version\": \"\"}, \"443\": {\"service\": \"http\", \"version\": \"\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"8000\": {\"service\": \"http-alt\", \"version\": \"\"}, \"8300\": {\"service\": \"tmi\", \"version\": \"\"}, \"9080\": {\"service\": \"glrpc\", \"version\": \"\"}}",
+            "vulnerabilite": "{\"80\": \"Aucune vulnerabilite detectee\", \"443\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"8000\": \"Aucune vulnerabilite detectee\", \"8300\": \"Aucune vulnerabilite detectee\", \"9080\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        },
+        {
+            "ip_adress": "172.20.30.60",
+            "port": "80, 443, 902, 8000, 8300, 9080",
+            "service": "{\"80\": {\"service\": \"http\", \"version\": \"\"}, \"443\": {\"service\": \"https\", \"version\": \"8.0.3\"}, \"902\": {\"service\": \"vmware-auth\", \"version\": \"1.10\"}, \"8000\": {\"service\": \"http-alt\", \"version\": \"\"}, \"8300\": {\"service\": \"tmi\", \"version\": \"\"}, \"9080\": {\"service\": \"glrpc\", \"version\": \"\"}}",
+            "vulnerabilite": "{\"80\": \"Aucune vulnerabilite detectee\", \"443\": \"Aucune vulnerabilite detectee\", \"902\": \"Aucune vulnerabilite detectee\", \"8000\": \"Aucune vulnerabilite detectee\", \"8300\": \"Aucune vulnerabilite detectee\", \"9080\": \"Aucune vulnerabilite detectee\"}",
+            "id_reseau": 0
+        }
+    ]
+}
