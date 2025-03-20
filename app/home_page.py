@@ -112,7 +112,7 @@ class HomePage:
         self.status_label.config(text="Scan terminé ! Résultats enregistrés et envoyé à l'API.")
 
         wan_response_time = ping_wan()
-        wan_result = f"{wan_response_time}ms" if wan_response_time != -1 else "Timeout"
+        wan_result = f"{wan_response_time}" if wan_response_time != -1 else "Timeout"
 
 
         # Mettre à jour le dashboard
