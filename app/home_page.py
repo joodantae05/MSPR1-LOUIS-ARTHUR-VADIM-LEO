@@ -12,7 +12,7 @@ from datetime import datetime
 import subprocess
 import re
 from scan import scan_network, scan_ports, ping_wan
-from dashboard_page import DashboardPage
+from dashboard_page import DashboardPage, get_system_info  # Importation de get_system_info
 from stats_page import StatsPage
 
 class HomePage:
@@ -44,9 +44,6 @@ class HomePage:
 
         self.status_label = tk.Label(self.frame, text="", font=("Segoe UI", 12), fg="white", bg="#2C3E50")
         self.status_label.pack(pady=10)
-
-        style = ttk.Style()
-        style.configure("TProgressbar", thickness=20, length=400, barcolor="#2ECC71")
 
     def show(self):
         self.frame.pack(fill='both', expand=True)
@@ -93,7 +90,6 @@ class HomePage:
                 ip, open_ports, service_info, vulnerabilities = future.result()
                 machine_info.append((ip, open_ports, service_info, vulnerabilities))
 
-                # Calcul du temps pour chaque hôte scanné
                 elapsed_time_per_host = time.time() - start_time - sum(self.times_per_host)
                 self.times_per_host.append(elapsed_time_per_host)
 
@@ -109,19 +105,16 @@ class HomePage:
 
     def finish_scan(self):
         self.progress_bar["value"] = 100
-        self.status_label.config(text="Scan terminé ! Résultats enregistrés et envoyé à l'API.")
+        self.status_label.config(text="Scan terminé ! Résultats enregistrés et envoyés à l'API.")
 
         wan_response_time = ping_wan()
         wan_result = f"{wan_response_time}" if wan_response_time != -1 else "Timeout"
 
-
-        # Mettre à jour le dashboard
         self.dashboard.show_results(self.machine_info)
 
         self.button.config(state="normal", bg="#3498DB", activebackground="#2980B9")
         self.total_scans += 1
 
-        # Calcul du temps moyen de scan
         if self.times_per_host:
             self.avg_scan_time = round(sum(self.times_per_host) / len(self.times_per_host), 2)
         else:
@@ -129,14 +122,12 @@ class HomePage:
 
         self.most_vulnerable_host = self.calculate_most_vulnerable_host()
 
-        # Enregistrer dans le fichier JSON
         results_folder = "resultats"
         if not os.path.exists(results_folder):
             os.makedirs(results_folder)
 
         json_file_path = os.path.join(results_folder, "data.json")
 
-        # Charger les données existantes
         merged_data = {
             "reseau": {
                 "id_reseau": 0,
@@ -144,7 +135,7 @@ class HomePage:
                 "nombre_machine": len(self.machine_info),
                 "date_heure": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                 "id_client": 0,
-                "lwan": wan_result  # Ajout du test WAN ici
+                "lwan": wan_result
             },
             "scan": {
                 "id_statistique": 0,
@@ -156,7 +147,6 @@ class HomePage:
             "machine": []
         }
 
-        # Ajouter les informations des machines scannées
         for ip, open_ports, service_info, vulnerabilities in self.machine_info:
             machine_data = {
                 "ip_adress": ip,
@@ -167,15 +157,15 @@ class HomePage:
             }
             merged_data["machine"].append(machine_data)
 
-        # Enregistrer dans data.json
+        # Ajout de la table hôte
+        merged_data["hote"] = get_system_info()["reseau"]
+
         with open(json_file_path, 'w', encoding='utf-8') as json_file:
             json.dump(merged_data, json_file, indent=4)
 
-        # Envoyer les résultats à l’API
         self.send_to_api(json_file_path)
 
     def send_to_api(self, json_file_path):
-        """Envoie les données JSON à l'API"""
         with open(json_file_path, 'r') as f:
             data = json.load(f)
 
@@ -183,7 +173,6 @@ class HomePage:
 
         try:
             response = requests.post(url, json=data)
-
             if response.status_code == 200:
                 print("Données envoyées avec succès !")
             else:
@@ -220,29 +209,3 @@ class HomePage:
         if self.machine_info:
             return self.machine_info[0][0]
         return "Aucun"
-    
-    def update_json(self):
-        """Met à jour le fichier JSON avec le temps moyen"""
-        results_folder = "resultats"
-        merged_data = {
-            "reseau": {
-                "id_reseau": 0,
-                "subnet": str(self.get_subnet(self.get_local_ip())),
-                "nombre_machine": len(self.machine_info),
-                "date_heure": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                "twan": wan_result,  # Mettre à jour le temps moyen
-                "id_client": 0
-            },
-            "scan": {
-                "id_statistique": 0,
-                "nombre_scan": 0,
-                "temps_moyen": 0,
-                "plus_vulnerable": "Aucun",
-                "id_reseau": 0
-            },
-            "machine": []
-        }
-
-        json_file_path = os.path.join(results_folder, "data.json")
-        with open(json_file_path, 'w', encoding='utf-8') as json_file:
-            json.dump(merged_data, json_file, indent=4)

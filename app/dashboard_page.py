@@ -8,7 +8,7 @@ from tkinter import messagebox
 
 # Fonction pour obtenir l'adresse IP locale
 def get_local_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.settimeout(0)
     try:
         s.connect(('10.254.254.254', 1))
@@ -19,48 +19,31 @@ def get_local_ip():
         s.close()
     return ip
 
-# Fonction pour obtenir les informations du systeme
+# Fonction pour obtenir les informations du système
 def get_system_info():
     try:
-        vm_name = platform.node()
-        os_name = platform.system()
-        os_version = platform.release()
-
-        system_info = {
-            "Nom de la machine": vm_name,
-            "Systeme d'exploitation": os_name,
-            "Version du systeme d'exploitation": os_version,
+        return {
+            "reseau": {
+                "id_hote": "1",
+                "nom": platform.node(),
+                "os": platform.system(),
+                "version_os": platform.release(),
+                "ip_adress": get_local_ip(),
+                "version_appli": get_last_commit_version(),
+                "id_reseau":"0"
+            }
         }
-        return system_info
     except Exception as e:
         return {"Erreur": str(e)}
 
-# Fonction pour recuperer la version de l'application basee sur le dernier commit Git
+# Fonction pour récupérer la version de l'application basée sur le dernier commit Git
 def get_last_commit_version():
     try:
-        # Executer la commande git pour recuperer le dernier message de commit
         commit_message = subprocess.check_output(["git", "log", "-1", "--pretty=%B"]).decode("utf-8").strip()
         return commit_message
-    except subprocess.CalledProcessError as e:
-        return "Erreur lors de la recuperation du commit"
+    except subprocess.CalledProcessError:
+        return "Erreur lors de la récupération du commit"
 
-# Fonction pour sauvegarder les informations systeme dans un fichier JSON
-def save_system_info_to_json():
-    try:
-        system_info = get_system_info()
-        local_ip = get_local_ip()
-        app_version = get_last_commit_version()
-
-        # Ajouter l'IP locale et la version de l'application aux informations systeme
-        system_info["Adresse IP locale"] = local_ip
-        system_info["Version de l'application"] = app_version
-
-        # Sauvegarde des informations dans un fichier JSON
-        with open("./resultats/host_info.json", "w") as json_file:
-            json.dump(system_info, json_file, indent=4)
-
-    except Exception as e:
-        print(f"Erreur lors de la sauvegarde des informations: {str(e)}")
 
 # Creation de l'interface graphique avec Tkinter
 class DashboardPage:
@@ -156,9 +139,6 @@ class DashboardPage:
         
         id_label = tk.Label(self.right_frame, text=f"id du client : 1", fg="white", bg="#2C3E50", font=("Arial", 12))
         id_label.pack(anchor="w", pady=5, padx=20)
-
-        # Sauvegarder les informations dans un fichier JSON
-        save_system_info_to_json()
 
     def refresh_system_info(self):
         self.system_info = get_system_info()
