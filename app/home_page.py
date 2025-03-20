@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 import subprocess
 import re
-from scan import scan_network, scan_ports
+from scan import scan_network, scan_ports, ping_wan
 from dashboard_page import DashboardPage
 from stats_page import StatsPage
 
@@ -109,10 +109,16 @@ class HomePage:
 
     def finish_scan(self):
         self.progress_bar["value"] = 100
-        self.status_label.config(text="Scan terminé !\n Fichier JSON créé dans le dossier 'resultats' et envoyé à l'API")
-        self.dashboard.show_results(self.machine_info)
-        self.button.config(state="normal", bg="#3498DB", activebackground="#2980B9")
+        self.status_label.config(text="Scan terminé ! Résultats enregistrés et envoyé à l'API.")
 
+        wan_response_time = ping_wan()
+        wan_result = f"{wan_response_time}ms" if wan_response_time != -1 else "Timeout"
+
+
+        # Mettre à jour le dashboard
+        self.dashboard.show_results(self.machine_info)
+
+        self.button.config(state="normal", bg="#3498DB", activebackground="#2980B9")
         self.total_scans += 1
 
         # Calcul du temps moyen de scan
@@ -123,57 +129,49 @@ class HomePage:
 
         self.most_vulnerable_host = self.calculate_most_vulnerable_host()
 
-        # Mettre à jour les statistiques sur la page Stats
-        self.stats_page.update_stats(self.total_scans, self.avg_scan_time, self.most_vulnerable_host)
-
-        # Enregistrement des résultats dans un fichier JSON fusionné
+        # Enregistrer dans le fichier JSON
         results_folder = "resultats"
         if not os.path.exists(results_folder):
             os.makedirs(results_folder)
 
-        # Créer un objet global pour les données
+        json_file_path = os.path.join(results_folder, "data.json")
+
+        # Charger les données existantes
         merged_data = {
             "reseau": {
-                "id_reseau": 0,  # ID du réseau, à personnaliser
+                "id_reseau": 0,
                 "subnet": str(self.get_subnet(self.get_local_ip())),
                 "nombre_machine": len(self.machine_info),
                 "date_heure": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                "lwan": self.lwan if self.lwan is not None else "Inconnu",  # Temps moyen de réponse (ping)
-                "id_client": 0  # ID du client, à personnaliser
+                "id_client": 0,
+                "lwan": wan_result  # Ajout du test WAN ici
             },
             "scan": {
-                "id_statistique": 0,  # ID de la statistique, à personnaliser
+                "id_statistique": 0,
                 "nombre_scan": self.total_scans,
                 "temps_moyen": self.avg_scan_time,
                 "plus_vulnerable": self.most_vulnerable_host,
-                "id_reseau": 0  # ID du réseau, à personnaliser
+                "id_reseau": 0
             },
             "machine": []
         }
 
-        # Ajouter les informations sur les machines scannées
+        # Ajouter les informations des machines scannées
         for ip, open_ports, service_info, vulnerabilities in self.machine_info:
             machine_data = {
                 "ip_adress": ip,
-                "port": ', '.join(map(str, open_ports)),  # Convertir la liste de ports en une chaîne
-                "service": json.dumps(service_info),  # Convertir le dictionnaire en chaîne JSON
-                "vulnerabilite": json.dumps(vulnerabilities),  # Convertir le dictionnaire en chaîne JSON
-                "id_reseau": 0  # ID du réseau, à personnaliser
+                "port": ', '.join(map(str, open_ports)),
+                "service": json.dumps(service_info),
+                "vulnerabilite": json.dumps(vulnerabilities),
+                "id_reseau": 0
             }
             merged_data["machine"].append(machine_data)
 
-        # Enregistrer le fichier JSON fusionné
-        json_file_path = os.path.join(results_folder, "data.json")
+        # Enregistrer dans data.json
         with open(json_file_path, 'w', encoding='utf-8') as json_file:
             json.dump(merged_data, json_file, indent=4)
 
-        # Créer un fichier scanned_ips.txt pour les adresses IP scannées
-        ip_addresses = [ip for ip, _, _, _ in self.machine_info]
-        txt_file_path = os.path.join(results_folder, "scanned_ips.txt")
-        with open(txt_file_path, 'w') as txt_file:
-            for ip in ip_addresses:
-                txt_file.write(ip + "\n")
-
+        # Envoyer les résultats à l’API
         self.send_to_api(json_file_path)
 
     def send_to_api(self, json_file_path):
@@ -222,53 +220,6 @@ class HomePage:
         if self.machine_info:
             return self.machine_info[0][0]
         return "Aucun"
-
-    def avg_time_wan(self):
-        """Exécute le test de ping vers 8.8.8.8 et met à jour le fichier JSON"""
-        try:
-            # La commande ping diffère selon le système d'exploitation
-            command = ["ping", "-c", "4", "8.8.8.8"]  # Commande pour Linux ou macOS
-            # Si vous êtes sur Windows, utilisez plutôt:
-            # command = ["ping", "-n", "4", "8.8.8.8"]
-
-            # Exécution de la commande ping
-            result = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, universal_newlines=True)
-            output, error = result.communicate()  # Récupérer à la fois la sortie et les erreurs
-
-            # Afficher la sortie brute de ping pour voir le format
-            print("Sortie brute de la commande ping :\n", output)
-            print("Erreurs éventuelles de ping :\n", error)
-
-            # Extraction du temps moyen de ping à partir de la sortie
-            avg_time = self.extract_avg_time(output)
-
-            if avg_time is None:
-                print("Le temps moyen de ping n'a pas pu être extrait.")
-            else:
-                print(f"Temps moyen de ping extrait : {avg_time} ms")
-
-            self.lwan = avg_time  # Stocke le temps moyen de ping
-            self.update_json()  # Met à jour le fichier JSON
-
-        except Exception as e:
-            print(f"Erreur lors du test de ping: {str(e)}")
-
-    def extract_avg_time(self, output):
-        """Extrait le temps moyen du ping"""
-        # Expression régulière pour Linux/macOS
-        match = re.search(r"rtt min/avg/max/mdev = (\d+\.\d+)", output)
-        if match:
-            print(f"Temps moyen extrait pour Linux/macOS: {match.group(1)} ms")
-            return match.group(1)  # Temps moyen extrait
-
-        # Expression régulière pour Windows
-        match_win = re.search(r"Average = (\d+)", output)
-        if match_win:
-            print(f"Temps moyen extrait pour Windows: {match_win.group(1)} ms")
-            return match_win.group(1)  # Temps moyen extrait
-
-        return None
-    
     
     def update_json(self):
         """Met à jour le fichier JSON avec le temps moyen"""
@@ -279,7 +230,7 @@ class HomePage:
                 "subnet": str(self.get_subnet(self.get_local_ip())),
                 "nombre_machine": len(self.machine_info),
                 "date_heure": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                "lwan": self.lwan if self.lwan is not None else "Inconnu",  # Mettre à jour le temps moyen
+                "twan": wan_result,  # Mettre à jour le temps moyen
                 "id_client": 0
             },
             "scan": {

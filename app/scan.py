@@ -4,6 +4,7 @@ import ipaddress
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import nmap
 import time
+import re
 
 def ping(host):
     """
@@ -31,7 +32,7 @@ def scan_ports(host):
     Scanne les ports de l'hôte en utilisant Nmap pour les ports les plus courants.
     Utilisation de l'option '-sV' pour obtenir des informations detaillees sur les services.
     """
-    nm = nmap.PortScanner()
+    nm = nmap.PortScanner(nmap_search_path=['C:\\Program Files (x86)\\Nmap\\nmap.exe'])
     try:
         nm.scan(hosts=host, arguments=' -sV -T4')  # Utilisation de T4 pour la rapidite
 
@@ -59,7 +60,6 @@ def scan_ports(host):
     except Exception as e:
         print(f"Erreur lors du scan des ports pour {host}: {e}")
         return host, [], {}, {}
-
 
 def scan_network(network_ip):
     """
@@ -97,3 +97,40 @@ def display_machine_info(ip, open_ports, service_info, vulnerabilities):
     else:
         print("Aucun port ouvert")
     print("--------------------------")
+
+def ping_wan():
+    """
+    Effectue un ping vers une IP publique et retourne le temps de réponse moyen en millisecondes (ms),
+    ou -1 si le ping échoue.
+    """
+    target_ip = "8.8.8.8"  # Google DNS
+    system_platform = platform.system().lower()
+    cmd = []
+
+    if system_platform == "windows":
+        cmd = cmd = ["ping", "-n", "4", target_ip]  # Envoie 4 paquets sous Windows
+        regex = r"temps[^\d]+(\d+)\s?ms"  # Regex améliorée
+    else:
+        cmd = ["ping", "-c", "4", target_ip]  # Envoie 4 paquets sous Linux/Mac
+        regex = r"min/avg/max/mdev = .*?/([\d.]+)/"
+
+    try:
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=5)
+        output = result.stdout
+        print("📌 Résultat brut du ping WAN :\n", output)  # DEBUGGING
+
+        # Chercher le temps de réponse moyen avec regex
+        match = re.search(regex, output, re.IGNORECASE)
+        if match:
+            print("📌 Temps moyen détecté :", match.group(1), "ms")  # DEBUGGING
+            return float(match.group(1))  # Retourne le temps moyen en ms
+        else:
+            print("⚠️ Aucune correspondance trouvée dans l'output")
+            return -1  # Échec de récupération du temps
+
+    except subprocess.TimeoutExpired:
+        print("⚠️ Ping WAN : Timeout")
+        return -1
+    except subprocess.CalledProcessError:
+        print("⚠️ Ping WAN : Erreur d'exécution")
+        return -1
